@@ -1,3 +1,7 @@
+using ControleGastos.Api.Services;
+using FluentValidation;
+using FluentValidation.AspNetCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 const string CorsPolicyName = "Default";
@@ -18,6 +22,15 @@ builder.Services.AddCors(options =>
               .AllowAnyMethod();
     });
 });
+
+// Validação automática de formato via FluentValidation (regras de negócio
+// permanecem nos services, não nos validators).
+builder.Services.AddValidatorsFromAssemblyContaining<Program>();
+builder.Services.AddFluentValidationAutoValidation();
+
+builder.Services.AddScoped<IPessoaService, PessoaService>();
+builder.Services.AddScoped<ITransacaoService, TransacaoService>();
+builder.Services.AddScoped<ITotaisService, TotaisService>();
 
 var app = builder.Build();
 
