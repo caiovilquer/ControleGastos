@@ -1,5 +1,7 @@
 # Controle de Gastos Residenciais
 
+[![CI](https://github.com/caiovilquer/ControleGastos/actions/workflows/ci.yml/badge.svg)](https://github.com/caiovilquer/ControleGastos/actions/workflows/ci.yml)
+
 Sistema com cadastro de pessoas, registro de transações (receitas e despesas) e consulta de totais por pessoa e geral.
 
 ## Stack
