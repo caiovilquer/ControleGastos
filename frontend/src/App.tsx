@@ -2,6 +2,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Toaster } from "@/components/ui/sonner"
 import { PessoasPage } from "@/components/pessoas/PessoasPage"
 import { TransacoesPage } from "@/components/transacoes/TransacoesPage"
+import { TotaisPage } from "@/components/totais/TotaisPage"
 
 function App() {
   return (
@@ -23,9 +24,8 @@ function App() {
           <TransacoesPage />
         </TabsContent>
 
-        {/* Conteúdo implementado em tarefa futura. */}
         <TabsContent value="totais">
-          <p className="text-sm text-muted-foreground">Em breve.</p>
+          <TotaisPage />
         </TabsContent>
       </Tabs>
 
