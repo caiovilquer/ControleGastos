@@ -1,4 +1,5 @@
 using ControleGastos.Api.Data;
+using ControleGastos.Api.Infrastructure;
 using ControleGastos.Api.Services;
 using FluentValidation;
 using FluentValidation.AspNetCore;
@@ -37,7 +38,14 @@ builder.Services.AddScoped<ITotaisService, TotaisService>();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+// Centraliza o mapeamento de exceções de negócio para status HTTP e evita
+// try/catch repetido em cada controller.
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
+
 var app = builder.Build();
+
+app.UseExceptionHandler();
 
 // Aplica migrations automaticamente no startup para permitir ao avaliador
 // rodar o projeto sem passos manuais de banco de dados.
