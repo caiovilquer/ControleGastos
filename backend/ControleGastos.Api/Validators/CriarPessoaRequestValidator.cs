@@ -14,6 +14,7 @@ public class CriarPessoaRequestValidator : AbstractValidator<CriarPessoaRequest>
             .MaximumLength(100);
 
         RuleFor(x => x.Idade)
-            .GreaterThanOrEqualTo(0);
+            .GreaterThanOrEqualTo(0)
+            .LessThanOrEqualTo(130);
     }
 }
