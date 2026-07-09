@@ -40,12 +40,7 @@ public class PessoasController : ControllerBase
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> Excluir(int id, CancellationToken cancellationToken)
     {
-        var excluido = await _pessoaService.ExcluirAsync(id, cancellationToken);
-        if (!excluido)
-        {
-            return NotFound();
-        }
-
+        await _pessoaService.ExcluirAsync(id, cancellationToken);
         return NoContent();
     }
 }

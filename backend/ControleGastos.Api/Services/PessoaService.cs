@@ -65,6 +65,18 @@ public class PessoaService : IPessoaService
         };
     }
 
-    public Task<bool> ExcluirAsync(int id, CancellationToken cancellationToken)
-        => throw new NotImplementedException();
+    public async Task ExcluirAsync(int id, CancellationToken cancellationToken)
+    {
+        var pessoa = await _dbContext.Pessoas.FindAsync(new object?[] { id }, cancellationToken);
+        if (pessoa is null)
+        {
+            throw new RecursoNaoEncontradoException($"Pessoa com id {id} não encontrada.");
+        }
+
+        // Não é preciso remover as transações manualmente: o cascade delete
+        // configurado em AppDbContext (OnDelete(DeleteBehavior.Cascade)) faz
+        // o SQLite apagá-las junto com a pessoa — regra de negócio do desafio.
+        _dbContext.Pessoas.Remove(pessoa);
+        await _dbContext.SaveChangesAsync(cancellationToken);
+    }
 }
