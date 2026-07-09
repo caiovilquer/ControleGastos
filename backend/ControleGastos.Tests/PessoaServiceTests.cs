@@ -1,4 +1,5 @@
 using ControleGastos.Api.DTOs;
+using ControleGastos.Api.Exceptions;
 using ControleGastos.Api.Models;
 using ControleGastos.Api.Services;
 using ControleGastos.Tests.Helpers;
@@ -32,11 +33,26 @@ public class PessoaServiceTests : IDisposable
         Assert.Equal(25, lida.Idade);
     }
 
-    // Prova, via SQLite in-memory, que o cascade delete configurado em
-    // AppDbContext (OnDelete(DeleteBehavior.Cascade)) remove as transações
-    // de uma pessoa quando ela é excluída — regra de negócio do desafio.
     [Fact]
-    public async Task ExcluirAsync_DeveRemoverTransacoesVinculadas_QuandoPessoaEExcluida()
+    public async Task ObterPorIdAsync_ComIdInexistente_LancaRecursoNaoEncontradoException()
+    {
+        await Assert.ThrowsAsync<RecursoNaoEncontradoException>(
+            () => _service.ObterPorIdAsync(999, CancellationToken.None));
+    }
+
+    [Fact]
+    public async Task ExcluirAsync_ComIdInexistente_LancaRecursoNaoEncontradoException()
+    {
+        await Assert.ThrowsAsync<RecursoNaoEncontradoException>(
+            () => _service.ExcluirAsync(999, CancellationToken.None));
+    }
+
+    // TESTE CENTRAL: prova, via SQLite in-memory, que o cascade delete
+    // configurado em AppDbContext (OnDelete(DeleteBehavior.Cascade)) remove
+    // as transações de uma pessoa quando ela é excluída — regra de negócio
+    // do desafio. A verificação é feita direto no DbContext, não via DTO.
+    [Fact]
+    public async Task ExcluirAsync_DeveRemoverTodasAsTransacoesVinculadas_QuandoPessoaEExcluida()
     {
         var dbContext = _factory.DbContext;
 
@@ -45,14 +61,35 @@ public class PessoaServiceTests : IDisposable
         await dbContext.SaveChangesAsync();
 
         dbContext.Transacoes.Add(TestDataBuilder.CriarTransacao(pessoa.Id, "Salário", 1000m, TipoTransacao.Receita));
+        dbContext.Transacoes.Add(TestDataBuilder.CriarTransacao(pessoa.Id, "Aluguel", 500m, TipoTransacao.Despesa));
         await dbContext.SaveChangesAsync();
 
-        Assert.Equal(1, await dbContext.Transacoes.CountAsync());
+        Assert.Equal(2, await dbContext.Transacoes.CountAsync(t => t.PessoaId == pessoa.Id));
 
         await _service.ExcluirAsync(pessoa.Id, CancellationToken.None);
 
-        Assert.Equal(0, await dbContext.Transacoes.CountAsync());
+        Assert.False(await dbContext.Transacoes.AnyAsync(t => t.PessoaId == pessoa.Id));
         Assert.Equal(0, await dbContext.Pessoas.CountAsync());
+    }
+
+    [Fact]
+    public async Task ExcluirAsync_ComOutraPessoaTendoTransacoes_NaoAfetaAsTransacoesDaOutraPessoa()
+    {
+        var dbContext = _factory.DbContext;
+
+        var pessoaExcluida = TestDataBuilder.CriarPessoa("Ana", 25);
+        var pessoaMantida = TestDataBuilder.CriarPessoa("Bruno", 30);
+        dbContext.Pessoas.AddRange(pessoaExcluida, pessoaMantida);
+        await dbContext.SaveChangesAsync();
+
+        dbContext.Transacoes.Add(TestDataBuilder.CriarTransacao(pessoaExcluida.Id, "Salário", 1000m, TipoTransacao.Receita));
+        dbContext.Transacoes.Add(TestDataBuilder.CriarTransacao(pessoaMantida.Id, "Mercado", 200m, TipoTransacao.Despesa));
+        await dbContext.SaveChangesAsync();
+
+        await _service.ExcluirAsync(pessoaExcluida.Id, CancellationToken.None);
+
+        Assert.Equal(1, await dbContext.Transacoes.CountAsync());
+        Assert.True(await dbContext.Transacoes.AnyAsync(t => t.PessoaId == pessoaMantida.Id));
     }
 
     public void Dispose() => _factory.Dispose();
