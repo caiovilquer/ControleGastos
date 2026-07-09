@@ -20,6 +20,18 @@ interface TransacaoFormProps {
   onSubmit: (input: CriarTransacaoInput) => Promise<boolean>
 }
 
+// Normaliza o valor digitado para o formato "1234.56" aceito por Number().
+// Ambiguidade proposital: na dúvida, ponto é decimal. Milhar (pt-BR) só é
+// reconhecido quando há uma vírgula decimal presente — ex.: "1.234" sem
+// vírgula é tratado como 1.234 (ponto decimal), não como 1234; já
+// "1.234,56" tem vírgula, então o ponto é removido como separador de milhar.
+function normalizarValor(valor: string): string {
+  if (valor.includes(",")) {
+    return valor.replace(/\./g, "").replace(",", ".")
+  }
+  return valor
+}
+
 // Validação de formato no cliente. A regra de negócio (menor de idade só
 // pode despesa) fica só no backend nesta tarefa — aqui só checamos que os
 // campos estão preenchidos e a forma do valor é válida.
@@ -28,8 +40,11 @@ function validar(pessoaId: string, descricao: string, valor: string): string | n
   if (descricao.trim().length === 0) return "Informe a descrição."
   if (descricao.length > 200) return "Descrição deve ter no máximo 200 caracteres."
 
-  if (!/^\d+([.,]\d{1,2})?$/.test(valor)) return "Valor inválido. Use números e centavos (ex.: 10,50)."
-  const valorNumero = Number(valor.replace(",", "."))
+  const valorNormalizado = normalizarValor(valor)
+  if (!/^\d+(\.\d{1,2})?$/.test(valorNormalizado)) {
+    return "Valor inválido. Use por exemplo 10,50 ou 1.234,56."
+  }
+  const valorNumero = Number(valorNormalizado)
   if (valorNumero <= 0) return "Valor deve ser maior que zero."
 
   return null
@@ -73,7 +88,7 @@ export function TransacaoForm({ pessoas, pessoasCarregando, onSubmit }: Transaca
     const sucesso = await onSubmit({
       pessoaId: Number(pessoaId),
       descricao: descricao.trim(),
-      valor: Number(valor.replace(",", ".")),
+      valor: Number(normalizarValor(valor)),
       tipo,
     })
     setEnviando(false)
