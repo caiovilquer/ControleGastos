@@ -26,11 +26,6 @@ public class PessoasController : ControllerBase
     public async Task<ActionResult<PessoaResponse>> ObterPorId(int id, CancellationToken cancellationToken)
     {
         var pessoa = await _pessoaService.ObterPorIdAsync(id, cancellationToken);
-        if (pessoa is null)
-        {
-            return NotFound();
-        }
-
         return Ok(pessoa);
     }
 
