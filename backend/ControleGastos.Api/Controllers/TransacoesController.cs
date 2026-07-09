@@ -34,11 +34,6 @@ public class TransacoesController : ControllerBase
     public async Task<ActionResult<TransacaoResponse>> ObterPorId(int id, CancellationToken cancellationToken)
     {
         var transacao = await _transacaoService.ObterPorIdAsync(id, cancellationToken);
-        if (transacao is null)
-        {
-            return NotFound();
-        }
-
         return Ok(transacao);
     }
 

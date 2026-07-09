@@ -10,7 +10,9 @@ public interface ITransacaoService
     // Extra além do requisito mínimo: útil para a tela de detalhe de uma pessoa.
     Task<IReadOnlyCollection<TransacaoResponse>> ListarPorPessoaAsync(int pessoaId, CancellationToken cancellationToken);
 
-    Task<TransacaoResponse?> ObterPorIdAsync(int id, CancellationToken cancellationToken);
+    // Lança RecursoNaoEncontradoException quando o id não existe; o handler
+    // global converte para 404, então o retorno nunca é nulo.
+    Task<TransacaoResponse> ObterPorIdAsync(int id, CancellationToken cancellationToken);
 
     // Valida aqui, no service, a regra de negócio de que menores de 18 anos
     // só podem registrar despesas — validação de formato fica no FluentValidation.
