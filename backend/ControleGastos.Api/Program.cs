@@ -55,6 +55,13 @@ using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     db.Database.Migrate();
+
+    // Dados de demonstração não pertencem a um ambiente real: só rodam em
+    // Development, para reduzir o atrito de quem for avaliar o desafio.
+    if (app.Environment.IsDevelopment())
+    {
+        await DbSeeder.SeedAsync(db);
+    }
 }
 
 if (app.Environment.IsDevelopment())

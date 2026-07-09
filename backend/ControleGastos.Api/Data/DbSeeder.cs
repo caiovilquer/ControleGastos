@@ -1,0 +1,51 @@
+using ControleGastos.Api.Models;
+using Microsoft.EntityFrameworkCore;
+
+namespace ControleGastos.Api.Data;
+
+// Dados de demonstração para reduzir o atrito de avaliação do desafio.
+public static class DbSeeder
+{
+    public static async Task SeedAsync(AppDbContext db)
+    {
+        // Seed idempotente: só popula um banco vazio, para não duplicar
+        // dados a cada reinício da aplicação.
+        if (await db.Pessoas.AnyAsync())
+        {
+            return;
+        }
+
+        var ana = new Pessoa { Nome = "Ana Souza", Idade = 42 };
+        var carlos = new Pessoa { Nome = "Carlos Lima", Idade = 35 };
+        // Menor de idade de propósito, para o avaliador testar a regra de
+        // negócio (só despesas) assim que sobe a aplicação.
+        var marina = new Pessoa { Nome = "Marina Alves", Idade = 16 };
+        var pedro = new Pessoa { Nome = "Pedro Santos", Idade = 28 };
+
+        db.Pessoas.AddRange(ana, carlos, marina, pedro);
+        await db.SaveChangesAsync();
+
+        db.Transacoes.AddRange(
+            // Ana: saldo positivo.
+            new Transacao { PessoaId = ana.Id, Descricao = "Salário", Valor = 5500.00m, Tipo = TipoTransacao.Receita },
+            new Transacao { PessoaId = ana.Id, Descricao = "Freela projeto X", Valor = 800.50m, Tipo = TipoTransacao.Receita },
+            new Transacao { PessoaId = ana.Id, Descricao = "Aluguel", Valor = 1800.00m, Tipo = TipoTransacao.Despesa },
+            new Transacao { PessoaId = ana.Id, Descricao = "Mercado", Valor = 620.75m, Tipo = TipoTransacao.Despesa },
+
+            // Carlos: saldo negativo (despesas maiores que a receita).
+            new Transacao { PessoaId = carlos.Id, Descricao = "Salário", Valor = 2200.00m, Tipo = TipoTransacao.Receita },
+            new Transacao { PessoaId = carlos.Id, Descricao = "Aluguel", Valor = 1800.00m, Tipo = TipoTransacao.Despesa },
+            new Transacao { PessoaId = carlos.Id, Descricao = "Mercado", Valor = 600.00m, Tipo = TipoTransacao.Despesa },
+
+            // Marina: menor de idade, apenas despesas.
+            new Transacao { PessoaId = marina.Id, Descricao = "Mercado", Valor = 45.90m, Tipo = TipoTransacao.Despesa },
+            new Transacao { PessoaId = marina.Id, Descricao = "Transporte", Valor = 60.00m, Tipo = TipoTransacao.Despesa },
+
+            // Pedro: receita e despesa, saldo positivo.
+            new Transacao { PessoaId = pedro.Id, Descricao = "Freela", Valor = 1200.00m, Tipo = TipoTransacao.Receita },
+            new Transacao { PessoaId = pedro.Id, Descricao = "Mercado", Valor = 380.25m, Tipo = TipoTransacao.Despesa }
+        );
+
+        await db.SaveChangesAsync();
+    }
+}
