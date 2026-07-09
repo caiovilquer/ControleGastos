@@ -1,33 +1,40 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Toaster } from "@/components/ui/sonner"
+import { useState } from "react"
+
+import { Header } from "@/components/layout/Header"
+import { Sidebar, type Pagina } from "@/components/layout/Sidebar"
 import { PessoasPage } from "@/components/pessoas/PessoasPage"
-import { TransacoesPage } from "@/components/transacoes/TransacoesPage"
 import { TotaisPage } from "@/components/totais/TotaisPage"
+import { TransacoesPage } from "@/components/transacoes/TransacoesPage"
+import { Toaster } from "@/components/ui/sonner"
+import { useTheme } from "@/hooks/useTheme"
+
+const TITULOS: Record<Pagina, { titulo: string; subtitulo: string }> = {
+  totais: { titulo: "Totais", subtitulo: "Visão geral das contas da casa" },
+  pessoas: { titulo: "Pessoas", subtitulo: "Cadastro e gestão dos membros da casa" },
+  transacoes: { titulo: "Transações", subtitulo: "Lançamentos de receitas e despesas" },
+}
 
 function App() {
+  const [pagina, setPagina] = useState<Pagina>("totais")
+  const { dark, toggle } = useTheme()
+  const { titulo, subtitulo } = TITULOS[pagina]
+
   return (
-    <div className="mx-auto flex min-h-svh max-w-4xl flex-col gap-6 p-6">
-      <h1 className="text-2xl font-semibold">Controle de Gastos Residenciais</h1>
+    <div className="flex min-h-svh">
+      <Sidebar paginaAtiva={pagina} onNavegar={setPagina} />
 
-      <Tabs defaultValue="pessoas">
-        <TabsList>
-          <TabsTrigger value="pessoas">Pessoas</TabsTrigger>
-          <TabsTrigger value="transacoes">Transações</TabsTrigger>
-          <TabsTrigger value="totais">Totais</TabsTrigger>
-        </TabsList>
+      <main className="h-screen min-w-0 flex-1 overflow-y-auto">
+        <Header titulo={titulo} subtitulo={subtitulo} dark={dark} onToggleDark={toggle} />
 
-        <TabsContent value="pessoas">
-          <PessoasPage />
-        </TabsContent>
-
-        <TabsContent value="transacoes">
-          <TransacoesPage />
-        </TabsContent>
-
-        <TabsContent value="totais">
-          <TotaisPage />
-        </TabsContent>
-      </Tabs>
+        <div className="max-w-[1120px] px-8 pt-7 pb-12">
+          {/* Cada página é montada/desmontada ao trocar de navegação — os
+              hooks de dados (usePessoas/useTransacoes/useTotais) recarregam
+              no mount, então a tela sempre reflete mudanças feitas alhures. */}
+          {pagina === "totais" && <TotaisPage onNavegarParaTransacoes={() => setPagina("transacoes")} />}
+          {pagina === "pessoas" && <PessoasPage />}
+          {pagina === "transacoes" && <TransacoesPage />}
+        </div>
+      </main>
 
       <Toaster />
     </div>

@@ -49,35 +49,39 @@ export function PessoaForm({ onSubmit }: PessoaFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-4 sm:flex-row sm:items-end">
-      <div className="flex flex-1 flex-col gap-2">
-        <Label htmlFor="pessoa-nome">Nome</Label>
+    <form onSubmit={handleSubmit} className="mt-5 flex flex-col gap-3.5">
+      <div className="flex flex-col gap-2">
+        <Label htmlFor="pessoa-nome" className="text-sm font-semibold">
+          Nome
+        </Label>
         <Input
           id="pessoa-nome"
           value={nome}
           onChange={(e) => setNome(e.target.value)}
-          placeholder="Nome da pessoa"
+          placeholder="Ex.: Fernanda Alves"
           disabled={enviando}
         />
       </div>
 
-      <div className="flex w-32 flex-col gap-2">
-        <Label htmlFor="pessoa-idade">Idade</Label>
+      <div className="flex flex-col gap-2">
+        <Label htmlFor="pessoa-idade" className="text-sm font-semibold">
+          Idade
+        </Label>
         <Input
           id="pessoa-idade"
           inputMode="numeric"
           value={idade}
           onChange={(e) => setIdade(e.target.value)}
-          placeholder="Idade"
+          placeholder="Ex.: 29"
           disabled={enviando}
         />
       </div>
 
-      <Button type="submit" disabled={enviando}>
-        {enviando ? "Salvando..." : "Adicionar"}
-      </Button>
+      {erro && <p className="text-sm text-destructive">{erro}</p>}
 
-      {erro && <p className="text-sm text-destructive sm:basis-full">{erro}</p>}
+      <Button type="submit" disabled={enviando} className="h-11 w-full rounded-[9px] font-semibold">
+        {enviando ? "Salvando..." : "Adicionar pessoa"}
+      </Button>
     </form>
   )
 }

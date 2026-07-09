@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { usePessoas } from "@/hooks/usePessoas"
 import { useTransacoes } from "@/hooks/useTransacoes"
 
@@ -12,14 +12,24 @@ export function TransacoesPage() {
   const { transacoes, loading, criar } = useTransacoes()
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Transações</CardTitle>
-      </CardHeader>
-      <CardContent className="flex flex-col gap-6">
+    <div className="flex max-w-[1120px] flex-wrap items-start gap-5">
+      <Card className="min-w-[280px] flex-[0_1_360px] rounded-2xl p-5.5 shadow-sm">
+        <CardTitle className="font-display text-base font-semibold">Nova transação</CardTitle>
+        <CardDescription className="text-sm">Registre uma receita ou despesa</CardDescription>
         <TransacaoForm pessoas={pessoas} pessoasCarregando={pessoasCarregando} onSubmit={criar} />
-        <TransacoesTable transacoes={transacoes} loading={loading} />
-      </CardContent>
-    </Card>
+      </Card>
+
+      <Card className="min-w-0 flex-[1_1_480px] overflow-hidden rounded-2xl shadow-sm">
+        <CardHeader className="flex items-center justify-between border-b border-border px-5 py-4.5">
+          <CardTitle className="font-display text-base font-semibold">Lançamentos</CardTitle>
+          <span className="text-sm font-semibold text-muted-foreground">
+            {transacoes.length} registros
+          </span>
+        </CardHeader>
+        <CardContent className="p-0">
+          <TransacoesTable transacoes={transacoes} loading={loading} />
+        </CardContent>
+      </Card>
+    </div>
   )
 }

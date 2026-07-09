@@ -11,6 +11,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import type { CriarTransacaoInput } from "@/hooks/useTransacoes"
+import { cn } from "@/lib/utils"
 import type { Pessoa, TipoTransacao } from "@/types"
 
 interface TransacaoFormProps {
@@ -87,47 +88,53 @@ export function TransacaoForm({ pessoas, pessoasCarregando, onSubmit }: Transaca
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+    <form onSubmit={handleSubmit} className="mt-5 flex flex-col gap-3.5">
       {semPessoas && (
         <p className="text-sm text-muted-foreground">
           Cadastre uma pessoa na aba Pessoas antes de lançar transações.
         </p>
       )}
 
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-end">
-        <div className="flex flex-1 flex-col gap-2">
-          <Label htmlFor="transacao-pessoa">Pessoa</Label>
-          <Select
-            value={pessoaId}
-            onValueChange={setPessoaId}
-            disabled={enviando || semPessoas}
-          >
-            <SelectTrigger id="transacao-pessoa" className="w-full">
-              <SelectValue placeholder="Selecione uma pessoa" />
-            </SelectTrigger>
-            <SelectContent>
-              {pessoas.map((pessoa) => (
-                <SelectItem key={pessoa.id} value={String(pessoa.id)}>
-                  {pessoa.nome} ({pessoa.idade})
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+      <div className="flex flex-col gap-2">
+        <Label htmlFor="transacao-pessoa" className="text-sm font-semibold">
+          Pessoa
+        </Label>
+        <Select value={pessoaId} onValueChange={setPessoaId} disabled={enviando || semPessoas}>
+          <SelectTrigger id="transacao-pessoa" className="w-full">
+            <SelectValue placeholder="Selecione a pessoa" />
+          </SelectTrigger>
+          <SelectContent>
+            {pessoas.map((pessoa) => (
+              <SelectItem key={pessoa.id} value={String(pessoa.id)}>
+                {pessoa.nome}
+                {pessoa.idade < 18 ? ` (${pessoa.idade} anos)` : ""}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
 
-        <div className="flex flex-1 flex-col gap-2">
-          <Label htmlFor="transacao-descricao">Descrição</Label>
-          <Input
-            id="transacao-descricao"
-            value={descricao}
-            onChange={(e) => setDescricao(e.target.value)}
-            placeholder="Descrição"
-            disabled={enviando || semPessoas}
-          />
-        </div>
+      <div className="flex flex-col gap-2">
+        <Label htmlFor="transacao-descricao" className="text-sm font-semibold">
+          Descrição
+        </Label>
+        <Input
+          id="transacao-descricao"
+          value={descricao}
+          onChange={(e) => setDescricao(e.target.value)}
+          placeholder="Ex.: Conta de água"
+          disabled={enviando || semPessoas}
+        />
+      </div>
 
-        <div className="flex w-32 flex-col gap-2">
-          <Label htmlFor="transacao-valor">Valor</Label>
+      <div className="flex flex-col gap-2">
+        <Label htmlFor="transacao-valor" className="text-sm font-semibold">
+          Valor
+        </Label>
+        <div className="flex h-9 items-center overflow-hidden rounded-md border border-input bg-transparent focus-within:border-ring focus-within:ring-[3px] focus-within:ring-ring/50 dark:bg-input/30">
+          <span className="flex h-full items-center border-r border-input px-3 text-sm font-semibold text-muted-foreground">
+            R$
+          </span>
           <Input
             id="transacao-valor"
             inputMode="decimal"
@@ -135,42 +142,70 @@ export function TransacaoForm({ pessoas, pessoasCarregando, onSubmit }: Transaca
             onChange={(e) => setValor(e.target.value)}
             placeholder="0,00"
             disabled={enviando || semPessoas}
+            className="h-full flex-1 border-0 font-mono shadow-none focus-visible:ring-0 dark:bg-transparent"
           />
         </div>
-
-        <div className="flex w-36 flex-col gap-2">
-          <Label htmlFor="transacao-tipo">Tipo</Label>
-          <Select
-            value={tipo}
-            onValueChange={(v) => setTipo(v as TipoTransacao)}
-            disabled={enviando || semPessoas}
-          >
-            <SelectTrigger id="transacao-tipo" className="w-full" title={pessoaMenorDeIdade ? "Menores de 18 anos podem registrar apenas despesas" : undefined}>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="Despesa">Despesa</SelectItem>
-              <SelectItem value="Receita" disabled={pessoaMenorDeIdade}>
-                Receita
-              </SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
-        <Button type="submit" disabled={enviando || semPessoas}>
-          {enviando ? "Salvando..." : "Adicionar"}
-        </Button>
       </div>
 
-      {/* Fora da linha de campos (que usa items-end) para não desalinhar
-          os inputs quando o aviso aparece/some. */}
-      {pessoaMenorDeIdade && (
-        <p className="text-xs text-muted-foreground">
-          Menores de 18 anos podem registrar apenas despesas.
-        </p>
-      )}
+      <div className="flex flex-col gap-2">
+        <Label className="text-sm font-semibold">Tipo</Label>
+        <div className="flex gap-2.5">
+          <button
+            type="button"
+            disabled={enviando || semPessoas}
+            onClick={() => setTipo("Despesa")}
+            className={cn(
+              "h-10 flex-1 rounded-lg border text-sm font-semibold transition-colors",
+              tipo === "Despesa"
+                ? "border-primary bg-primary/10 text-primary"
+                : "border-border text-foreground hover:bg-muted",
+              (enviando || semPessoas) && "cursor-not-allowed opacity-55"
+            )}
+          >
+            Despesa
+          </button>
+          <button
+            type="button"
+            disabled={enviando || semPessoas || pessoaMenorDeIdade}
+            onClick={() => setTipo("Receita")}
+            title={pessoaMenorDeIdade ? "Menores de 18 anos podem registrar apenas despesas" : undefined}
+            className={cn(
+              "h-10 flex-1 rounded-lg border text-sm font-semibold transition-colors",
+              tipo === "Receita"
+                ? "border-primary bg-primary/10 text-primary"
+                : "border-border text-foreground hover:bg-muted",
+              (enviando || semPessoas || pessoaMenorDeIdade) &&
+                "cursor-not-allowed text-muted-foreground opacity-55"
+            )}
+          >
+            Receita
+          </button>
+        </div>
+
+        {/* Regra de negócio central antecipada no cliente por UX: a
+            validação de verdade continua no backend (422). */}
+        {pessoaMenorDeIdade && (
+          <div className="flex gap-2.5 rounded-[10px] border border-warn-weak bg-warn-weak p-3">
+            <span className="flex size-4.5 shrink-0 items-center justify-center rounded-full bg-warn text-xs font-bold text-card">
+              !
+            </span>
+            <span className="text-sm leading-relaxed font-medium text-warn">
+              {pessoaSelecionada?.nome} tem {pessoaSelecionada?.idade} anos. Só pode registrar
+              despesas.
+            </span>
+          </div>
+        )}
+      </div>
 
       {erro && <p className="text-sm text-destructive">{erro}</p>}
+
+      <Button
+        type="submit"
+        disabled={enviando || semPessoas}
+        className="h-11 w-full rounded-[9px] font-semibold"
+      >
+        {enviando ? "Salvando..." : "Registrar transação"}
+      </Button>
     </form>
   )
 }

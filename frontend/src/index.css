@@ -4,86 +4,112 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+
+  /* Estados semânticos: sucesso/receita, perigo/despesa, aviso de menor
+     de idade. Regra de contraste: usar a versão "weak" só como fundo de
+     badge, nunca como cor de texto. */
+  --color-success: hsl(var(--success));
+  --color-success-weak: hsl(var(--success-weak));
+  --color-danger: hsl(var(--danger));
+  --color-danger-weak: hsl(var(--danger-weak));
+  --color-warn: hsl(var(--warn));
+  --color-warn-weak: hsl(var(--warn-weak));
+
+  /* Hero do total geral: sempre com o mesmo visual escuro, independente
+     do tema claro/escuro do resto da aplicação — por isso são cores
+     fixas, não vinculadas a :root/.dark. */
+  --color-hero-bg: #0e1b33;
+  --color-hero-fg: #eef2fa;
+  --color-hero-muted: #93a3c2;
+  --color-hero-pos: #5fe0a6;
+  --color-hero-neg: #ff8f86;
+  --color-hero-line: #243352;
+
+  --font-sans: "Hanken Grotesk", system-ui, sans-serif;
+  --font-display: "Space Grotesk", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+
   --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
+  --radius-md: calc(var(--radius) - 4px);
+  --radius-sm: calc(var(--radius) - 6px);
 }
 
 :root {
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
+  --radius: 0.75rem;
+  --background: 220 20% 96%;
+  --foreground: 220 20% 6%;
+  --card: 0 0% 100%;
+  --card-foreground: 220 20% 6%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 220 20% 6%;
+  --primary: 221 68% 50%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 216 20% 93%;
+  --secondary-foreground: 220 20% 6%;
+  --muted: 216 22% 94%;
+  --muted-foreground: 220 10% 37%;
+  --accent: 216 22% 94%;
+  --accent-foreground: 220 20% 6%;
+  --border: 216 24% 90%;
+  --input: 0 0% 100%;
+  --ring: 221 68% 50%;
+  --destructive: 5 71% 45%;
+  --destructive-foreground: 0 0% 100%;
+
+  --success: 156 84% 27%;
+  --success-weak: 150 47% 92%;
+  --danger: 5 71% 45%;
+  --danger-weak: 14 78% 95%;
+  --warn: 32 100% 30%;
+  --warn-weak: 37 79% 94%;
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
+  --background: 220 24% 6%;
+  --foreground: 216 24% 90%;
+  --card: 220 22% 9%;
+  --card-foreground: 216 24% 90%;
+  --popover: 220 22% 9%;
+  --popover-foreground: 216 24% 90%;
+  --primary: 220 91% 63%;
+  --primary-foreground: 220 60% 9%;
+  --secondary: 217 20% 13%;
+  --secondary-foreground: 216 24% 90%;
+  --muted: 216 22% 12%;
+  --muted-foreground: 216 12% 63%;
+  --accent: 216 22% 12%;
+  --accent-foreground: 216 24% 90%;
+  --border: 216 22% 17%;
+  --input: 216 24% 11%;
+  --ring: 220 91% 63%;
+  --destructive: 5 84% 63%;
+  --destructive-foreground: 220 24% 6%;
+
+  --success: 156 61% 47%;
+  --success-weak: 156 42% 12%;
+  --danger: 5 84% 63%;
+  --danger-weak: 6 41% 13%;
+  --warn: 45 97% 58%;
+  --warn-weak: 46 55% 12%;
 }
 
 @layer base {
