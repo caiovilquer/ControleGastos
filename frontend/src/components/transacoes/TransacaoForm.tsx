@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from "react"
+import { useEffect, useState, type FormEvent } from "react"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -43,6 +43,20 @@ export function TransacaoForm({ pessoas, pessoasCarregando, onSubmit }: Transaca
   const [enviando, setEnviando] = useState(false)
 
   const semPessoas = !pessoasCarregando && pessoas.length === 0
+
+  const pessoaSelecionada = pessoas.find((p) => String(p.id) === pessoaId)
+  const pessoaMenorDeIdade = (pessoaSelecionada?.idade ?? 0) < 18 && pessoaSelecionada !== undefined
+
+  // Antecipação da regra de negócio no cliente, só para UX: a validação
+  // de verdade continua no backend (que responde 422 se for burlada, por
+  // exemplo trocando a pessoa depois de já ter marcado Receita).
+  // Se a pessoa selecionada mudar para uma menor de idade enquanto
+  // "Receita" estava marcado, volta automaticamente para "Despesa".
+  useEffect(() => {
+    if (pessoaMenorDeIdade && tipo === "Receita") {
+      setTipo("Despesa")
+    }
+  }, [pessoaMenorDeIdade, tipo])
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault()
@@ -131,12 +145,14 @@ export function TransacaoForm({ pessoas, pessoasCarregando, onSubmit }: Transaca
             onValueChange={(v) => setTipo(v as TipoTransacao)}
             disabled={enviando || semPessoas}
           >
-            <SelectTrigger id="transacao-tipo" className="w-full">
+            <SelectTrigger id="transacao-tipo" className="w-full" title={pessoaMenorDeIdade ? "Menores de 18 anos podem registrar apenas despesas" : undefined}>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="Despesa">Despesa</SelectItem>
-              <SelectItem value="Receita">Receita</SelectItem>
+              <SelectItem value="Receita" disabled={pessoaMenorDeIdade}>
+                Receita
+              </SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -145,6 +161,14 @@ export function TransacaoForm({ pessoas, pessoasCarregando, onSubmit }: Transaca
           {enviando ? "Salvando..." : "Adicionar"}
         </Button>
       </div>
+
+      {/* Fora da linha de campos (que usa items-end) para não desalinhar
+          os inputs quando o aviso aparece/some. */}
+      {pessoaMenorDeIdade && (
+        <p className="text-xs text-muted-foreground">
+          Menores de 18 anos podem registrar apenas despesas.
+        </p>
+      )}
 
       {erro && <p className="text-sm text-destructive">{erro}</p>}
     </form>
