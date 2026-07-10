@@ -12,10 +12,10 @@ export function ReceitaDespesaBar({ receitas, despesas }: ReceitaDespesaBarProps
   const pctDespesas = (despesas / total) * 100
 
   return (
-    <div className="mt-5 w-full max-w-md">
-      <div className="mb-2 flex justify-between text-xs font-semibold text-hero-muted">
+    <div className="mt-4 w-full max-w-md sm:mt-5">
+      <div className="mb-2 flex flex-col gap-0.5 text-xs font-semibold text-hero-muted sm:flex-row sm:justify-between sm:gap-2">
         <span>Composição do fluxo</span>
-        <span>
+        <span className="tabular-nums">
           {pctReceitas.toFixed(0)}% receitas · {pctDespesas.toFixed(0)}% despesas
         </span>
       </div>

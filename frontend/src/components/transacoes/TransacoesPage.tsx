@@ -22,21 +22,21 @@ export function TransacoesPage() {
   }
 
   return (
-    <div className="flex w-full flex-wrap items-start gap-5">
-      <Card className="min-w-[280px] flex-[0_1_360px] rounded-2xl p-5.5 shadow-sm">
+    <div className="flex w-full min-w-0 flex-col items-stretch gap-4 sm:flex-row sm:flex-wrap sm:items-start sm:gap-5">
+      <Card className="w-full min-w-0 rounded-2xl p-4 shadow-sm sm:min-w-[280px] sm:flex-[0_1_360px] sm:p-5.5">
         <CardTitle className="font-display text-base font-semibold">Nova transação</CardTitle>
         <CardDescription className="text-sm">Registre uma receita ou despesa</CardDescription>
         <TransacaoForm pessoas={pessoas} pessoasCarregando={pessoasCarregando} onSubmit={criar} />
       </Card>
 
-      <Card className="min-w-0 flex-[1_1_480px] overflow-hidden rounded-2xl shadow-sm">
-        <CardHeader className="flex items-center justify-between border-b border-border px-5 py-4.5">
+      <Card className="w-full min-w-0 overflow-hidden rounded-2xl shadow-sm sm:flex-[1_1_480px]">
+        <CardHeader className="flex items-center justify-between border-b border-border px-4 py-4 sm:px-5 sm:py-4.5">
           <CardTitle className="font-display text-base font-semibold">Lançamentos</CardTitle>
           <span className="text-sm font-semibold text-muted-foreground">
             {transacoes.length} registros
           </span>
         </CardHeader>
-        <CardContent className="p-0">
+        <CardContent className="min-w-0 p-0">
           <TransacoesTable
             transacoes={transacoes}
             loading={loading}

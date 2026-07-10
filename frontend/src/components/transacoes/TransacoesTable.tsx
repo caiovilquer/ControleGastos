@@ -60,9 +60,9 @@ export function TransacoesTable({
 
   return (
     <div>
-      <div className="flex flex-wrap items-center gap-2.5 border-b border-border px-5 py-3.5">
+      <div className="flex flex-col gap-2.5 border-b border-border px-4 py-3 sm:flex-row sm:flex-wrap sm:items-center sm:gap-2.5 sm:px-5 sm:py-3.5">
         <Select value={filtroPessoaId} onValueChange={onFiltroPessoaChange}>
-          <SelectTrigger className="h-9 w-[180px]" aria-label="Filtrar por pessoa">
+          <SelectTrigger className="h-9 w-full sm:w-[180px]" aria-label="Filtrar por pessoa">
             <SelectValue placeholder="Todas as pessoas" />
           </SelectTrigger>
           <SelectContent>
@@ -75,14 +75,14 @@ export function TransacoesTable({
           </SelectContent>
         </Select>
 
-        <div className="flex gap-1.5">
+        <div className="flex w-full gap-1.5 sm:w-auto">
           {TIPOS.map((tipo) => (
             <button
               key={tipo}
               type="button"
               onClick={() => onFiltroTipoChange(tipo)}
               className={cn(
-                "h-9 rounded-lg border px-3 text-xs font-semibold transition-colors",
+                "h-9 flex-1 rounded-lg border px-3 text-xs font-semibold transition-colors sm:flex-none",
                 filtroTipo === tipo
                   ? "border-primary bg-primary/10 text-primary"
                   : "border-border text-muted-foreground hover:bg-muted"
@@ -99,7 +99,7 @@ export function TransacoesTable({
             variant="ghost"
             size="sm"
             onClick={onLimparFiltros}
-            className="ml-auto text-muted-foreground"
+            className="text-muted-foreground sm:ml-auto"
           >
             Limpar filtros
           </Button>
@@ -157,15 +157,17 @@ export function TransacoesTable({
               const receita = transacao.tipo === "Receita"
               return (
                 <TableRow key={transacao.id} className="animate-page-in">
-                  <TableCell className="max-w-0 px-5 py-[13px]">
-                    <div className="flex min-w-0 items-center gap-2.5">
+                  {/* Sem max-w-0/truncate: o scroll horizontal + fade já
+                      acomodam a largura; truncar escondia o nome no mobile. */}
+                  <TableCell className="px-4 py-[13px] sm:px-5">
+                    <div className="flex items-center gap-2.5">
                       <Avatar nome={transacao.pessoaNome} size={28} />
-                      <span className="truncate text-sm font-semibold whitespace-nowrap">
+                      <span className="text-sm font-semibold whitespace-nowrap">
                         {transacao.pessoaNome}
                       </span>
                     </div>
                   </TableCell>
-                  <TableCell className="max-w-0 truncate px-5 py-[13px] text-sm whitespace-nowrap">
+                  <TableCell className="px-4 py-[13px] text-sm whitespace-nowrap sm:px-5">
                     {transacao.descricao}
                   </TableCell>
                   <TableCell className="px-5 py-[13px]">

@@ -131,16 +131,18 @@ export function TotaisChart({ pessoas }: TotaisChartProps) {
   const alturaViewport = precisaScroll ? ALTURA_MAX_VISIVEL : alturaConteudo
 
   return (
-    <div className="w-full">
-      <div className="flex flex-wrap items-center gap-1.5 px-3 pb-2">
-        <span className="mr-1 text-xs font-medium text-muted-foreground">Ordenar:</span>
+    <div className="w-full min-w-0">
+      <div className="flex flex-wrap items-center gap-1.5 px-2 pb-2 sm:px-3">
+        <span className="mr-1 w-full text-xs font-medium text-muted-foreground sm:w-auto">
+          Ordenar:
+        </span>
         {OPCOES_ORDENACAO.map((opcao) => (
           <button
             key={opcao.id}
             type="button"
             onClick={() => setOrdenacao(opcao.id)}
             className={cn(
-              "h-7 rounded-md border px-2.5 text-[11px] font-semibold transition-colors",
+              "h-7 rounded-md border px-2 text-[11px] font-semibold transition-colors sm:px-2.5",
               ordenacao === opcao.id
                 ? "border-primary bg-primary/10 text-primary"
                 : "border-border text-muted-foreground hover:bg-muted"
@@ -152,16 +154,16 @@ export function TotaisChart({ pessoas }: TotaisChartProps) {
       </div>
 
       <div
-        className={cn("w-full px-2 pt-1 pb-1", precisaScroll && "overflow-y-auto")}
+        className={cn("w-full min-w-0 px-1 pt-1 pb-1 sm:px-2", precisaScroll && "overflow-y-auto")}
         style={{ height: alturaViewport }}
       >
-        <div style={{ height: alturaConteudo, minHeight: alturaConteudo }}>
+        <div className="min-w-0" style={{ height: alturaConteudo, minHeight: alturaConteudo }}>
           <ResponsiveContainer width="100%" height="100%">
             {horizontal ? (
               <BarChart
                 layout="vertical"
                 data={data}
-                margin={{ top: 8, right: 16, left: 4, bottom: 8 }}
+                margin={{ top: 8, right: 8, left: 0, bottom: 8 }}
                 barGap={3}
               >
                 <CartesianGrid strokeDasharray="3 3" horizontal={false} className="stroke-border" />
@@ -175,10 +177,10 @@ export function TotaisChart({ pessoas }: TotaisChartProps) {
                 <YAxis
                   type="category"
                   dataKey="nomeEixo"
-                  width={96}
+                  width={72}
                   tickLine={false}
                   axisLine={false}
-                  tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }}
+                  tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }}
                 />
                 <Tooltip
                   content={<TooltipConteudo />}

@@ -1,7 +1,8 @@
-import { BarChart3, Users, ArrowLeftRight, PanelLeftClose, PanelLeftOpen } from "lucide-react"
+import { PanelLeftClose, PanelLeftOpen } from "lucide-react"
 
 import { BrandMark } from "@/components/shared/BrandMark"
 import { Button } from "@/components/ui/button"
+import { NAV_ITENS } from "@/components/layout/nav"
 import { cn } from "@/lib/utils"
 
 export type Pagina = "totais" | "pessoas" | "transacoes"
@@ -13,12 +14,7 @@ interface SidebarProps {
   onToggleCollapsed: () => void
 }
 
-const ITENS: Array<{ id: Pagina; label: string; Icon: typeof BarChart3 }> = [
-  { id: "totais", label: "Totais", Icon: BarChart3 },
-  { id: "pessoas", label: "Pessoas", Icon: Users },
-  { id: "transacoes", label: "Transações", Icon: ArrowLeftRight },
-]
-
+// Sidebar só no desktop (md+). No mobile a navegação é a MobileNav.
 export function Sidebar({
   paginaAtiva,
   onNavegar,
@@ -28,7 +24,7 @@ export function Sidebar({
   return (
     <aside
       className={cn(
-        "sticky top-0 flex h-screen shrink-0 flex-col border-r border-border bg-card transition-[width] duration-200 ease-out",
+        "sticky top-0 hidden h-screen shrink-0 flex-col border-r border-border bg-card transition-[width] duration-200 ease-out md:flex",
         collapsed ? "w-[72px] px-3 py-5" : "w-[250px] p-5"
       )}
     >
@@ -56,10 +52,7 @@ export function Sidebar({
           onClick={onToggleCollapsed}
           aria-label={collapsed ? "Expandir menu" : "Recolher menu"}
           title={collapsed ? "Expandir menu" : "Recolher menu"}
-          className={cn(
-            "size-8 shrink-0 text-muted-foreground hover:text-foreground",
-            collapsed && "mt-0"
-          )}
+          className="size-8 shrink-0 text-muted-foreground hover:text-foreground"
         >
           {collapsed ? (
             <PanelLeftOpen className="size-4" />
@@ -70,7 +63,7 @@ export function Sidebar({
       </div>
 
       <nav className="flex flex-col gap-1">
-        {ITENS.map(({ id, label, Icon }) => {
+        {NAV_ITENS.map(({ id, label, Icon }) => {
           const ativo = id === paginaAtiva
           return (
             <Button

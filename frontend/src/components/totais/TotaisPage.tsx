@@ -44,23 +44,23 @@ export function TotaisPage({ onNavegarParaTransacoes }: TotaisPageProps) {
       : []
 
   return (
-    <div className="flex w-full flex-col gap-5">
+    <div className="flex w-full min-w-0 flex-col gap-4 sm:gap-5">
       {!semDados && (
-        <div className="animate-fade-up rounded-2xl bg-hero-bg p-8 text-hero-fg shadow-[0_14px_44px_rgba(11,46,42,.32)]">
+        <div className="animate-fade-up overflow-hidden rounded-2xl bg-hero-bg p-5 text-hero-fg shadow-[0_14px_44px_rgba(11,46,42,.32)] sm:p-8">
           {carregando || !totais ? (
             <div className="flex flex-col gap-3">
               <Skeleton className="h-3.5 w-56 bg-white/10" />
-              <Skeleton className="h-14 w-85 bg-white/10" />
-              <Skeleton className="h-3.5 w-72 bg-white/10" />
+              <Skeleton className="h-14 w-full max-w-85 bg-white/10" />
+              <Skeleton className="h-3.5 w-72 max-w-full bg-white/10" />
             </div>
           ) : (
-            <div className="flex flex-wrap items-start justify-between gap-7">
+            <div className="flex flex-col gap-5 sm:flex-row sm:flex-wrap sm:items-start sm:justify-between sm:gap-7">
               <div className="min-w-0 flex-1">
                 <span className="text-xs font-semibold tracking-wider text-hero-muted uppercase">
                   Saldo geral acumulado
                 </span>
                 <div
-                  className={`mt-3 font-mono text-[48px] leading-none font-bold tracking-tight sm:text-[64px] ${
+                  className={`mt-2 break-all font-mono text-[36px] leading-none font-bold tracking-tight sm:mt-3 sm:text-[64px] ${
                     totais.saldo >= 0 ? "text-hero-pos" : "text-hero-neg"
                   }`}
                 >
@@ -75,22 +75,22 @@ export function TotaisPage({ onNavegarParaTransacoes }: TotaisPageProps) {
                 />
               </div>
 
-              <div className="flex flex-wrap gap-3.5">
-                <div className="min-w-[160px] rounded-xl border border-hero-line bg-white/5 px-5 py-4">
-                  <span className="flex items-center gap-1.5 text-sm font-semibold text-hero-muted">
-                    <span className="size-2 rounded-full bg-hero-pos" />
+              <div className="grid w-full grid-cols-2 gap-2.5 sm:flex sm:w-auto sm:flex-wrap sm:gap-3.5">
+                <div className="min-w-0 rounded-xl border border-hero-line bg-white/5 px-3.5 py-3 sm:min-w-[160px] sm:px-5 sm:py-4">
+                  <span className="flex items-center gap-1.5 text-xs font-semibold text-hero-muted sm:text-sm">
+                    <span className="size-2 shrink-0 rounded-full bg-hero-pos" />
                     Receitas
                   </span>
-                  <div className="mt-2 font-mono text-[23px] font-semibold tabular-nums text-hero-fg">
+                  <div className="mt-1.5 truncate font-mono text-base font-semibold tabular-nums text-hero-fg sm:mt-2 sm:text-[23px]">
                     {formatarMoeda(totais.totalReceitas)}
                   </div>
                 </div>
-                <div className="min-w-[160px] rounded-xl border border-hero-line bg-white/5 px-5 py-4">
-                  <span className="flex items-center gap-1.5 text-sm font-semibold text-hero-muted">
-                    <span className="size-2 rounded-full bg-hero-neg" />
+                <div className="min-w-0 rounded-xl border border-hero-line bg-white/5 px-3.5 py-3 sm:min-w-[160px] sm:px-5 sm:py-4">
+                  <span className="flex items-center gap-1.5 text-xs font-semibold text-hero-muted sm:text-sm">
+                    <span className="size-2 shrink-0 rounded-full bg-hero-neg" />
                     Despesas
                   </span>
-                  <div className="mt-2 font-mono text-[23px] font-semibold tabular-nums text-hero-neg">
+                  <div className="mt-1.5 truncate font-mono text-base font-semibold tabular-nums text-hero-neg sm:mt-2 sm:text-[23px]">
                     {formatarMoeda(totais.totalDespesas)}
                   </div>
                 </div>
@@ -103,8 +103,8 @@ export function TotaisPage({ onNavegarParaTransacoes }: TotaisPageProps) {
       {!semDados && insights.length > 0 && <TotaisInsights insights={insights} />}
 
       {!semDados && totais && totais.pessoas.length > 0 && (
-        <Card className="animate-fade-up overflow-hidden rounded-2xl shadow-sm">
-          <CardHeader className="border-b border-border px-5 py-4.5">
+        <Card className="animate-fade-up min-w-0 overflow-hidden rounded-2xl shadow-sm">
+          <CardHeader className="border-b border-border px-4 py-4 sm:px-5 sm:py-4.5">
             <CardTitle className="font-display text-base font-semibold">
               Receitas e despesas por pessoa
             </CardTitle>
@@ -112,7 +112,7 @@ export function TotaisPage({ onNavegarParaTransacoes }: TotaisPageProps) {
               Comparativo visual dos totais
             </CardDescription>
           </CardHeader>
-          <CardContent className="px-2 pt-2 pb-3">
+          <CardContent className="min-w-0 px-1 pt-2 pb-3 sm:px-2">
             {carregando ? (
               <div className="flex h-[280px] items-center justify-center px-5">
                 <Skeleton className="h-[200px] w-full" />
@@ -132,8 +132,8 @@ export function TotaisPage({ onNavegarParaTransacoes }: TotaisPageProps) {
         </Card>
       )}
 
-      <Card className="overflow-hidden rounded-2xl shadow-sm">
-        <CardHeader className="border-b border-border px-5 py-4.5">
+      <Card className="min-w-0 overflow-hidden rounded-2xl shadow-sm">
+        <CardHeader className="border-b border-border px-4 py-4 sm:px-5 sm:py-4.5">
           <CardTitle className="font-display text-base font-semibold">
             Detalhamento por pessoa
           </CardTitle>
@@ -141,7 +141,7 @@ export function TotaisPage({ onNavegarParaTransacoes }: TotaisPageProps) {
             Receitas, despesas e saldo individual
           </CardDescription>
         </CardHeader>
-        <CardContent className="p-0">
+        <CardContent className="min-w-0 p-0">
           {semDados ? (
             <div className="flex flex-col items-center px-6 py-13 text-center">
               <div className="flex size-13 items-center justify-center rounded-2xl bg-muted text-muted-foreground">

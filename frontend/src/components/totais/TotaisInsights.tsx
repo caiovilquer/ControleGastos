@@ -21,7 +21,7 @@ export function TotaisInsights({ insights }: TotaisInsightsProps) {
         <div
           key={insight.texto}
           className={cn(
-            "animate-fade-up rounded-xl border px-4 py-3 text-sm leading-relaxed font-medium",
+            "animate-fade-up rounded-xl border px-3.5 py-2.5 text-sm leading-relaxed font-medium sm:px-4 sm:py-3",
             TOM_CLASS[insight.tom]
           )}
         >
