@@ -34,15 +34,13 @@
   --color-warn: hsl(var(--warn));
   --color-warn-weak: hsl(var(--warn-weak));
 
-  /* Hero do total geral: sempre com o mesmo visual escuro, independente
-     do tema claro/escuro do resto da aplicação — por isso são cores
-     fixas, não vinculadas a :root/.dark. */
-  --color-hero-bg: #0e1b33;
-  --color-hero-fg: #eef2fa;
-  --color-hero-muted: #93a3c2;
-  --color-hero-pos: #5fe0a6;
-  --color-hero-neg: #ff8f86;
-  --color-hero-line: #243352;
+  /* Hero do total geral: teal escuro fixo, independente do tema. */
+  --color-hero-bg: #0b2e2a;
+  --color-hero-fg: #ecfdf8;
+  --color-hero-muted: #8bbdb4;
+  --color-hero-pos: #5eead4;
+  --color-hero-neg: #fda4a4;
+  --color-hero-line: #1a4a44;
 
   --font-sans: "Hanken Grotesk", system-ui, sans-serif;
   --font-display: "Space Grotesk", system-ui, sans-serif;
@@ -51,27 +49,53 @@
   --radius-lg: var(--radius);
   --radius-md: calc(var(--radius) - 4px);
   --radius-sm: calc(var(--radius) - 6px);
+
+  --animate-page-in: page-in 280ms ease-out;
+  --animate-fade-up: fade-up 360ms ease-out;
+}
+
+@keyframes page-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 :root {
   --radius: 0.75rem;
-  --background: 220 20% 96%;
-  --foreground: 220 20% 6%;
+  /* Fundo levemente esverdeado — casa/finanças, fora do azul shadcn. */
+  --background: 168 24% 96%;
+  --foreground: 174 40% 8%;
   --card: 0 0% 100%;
-  --card-foreground: 220 20% 6%;
+  --card-foreground: 174 40% 8%;
   --popover: 0 0% 100%;
-  --popover-foreground: 220 20% 6%;
-  --primary: 221 68% 50%;
+  --popover-foreground: 174 40% 8%;
+  --primary: 173 80% 26%;
   --primary-foreground: 0 0% 100%;
-  --secondary: 216 20% 93%;
-  --secondary-foreground: 220 20% 6%;
-  --muted: 216 22% 94%;
-  --muted-foreground: 220 10% 37%;
-  --accent: 216 22% 94%;
-  --accent-foreground: 220 20% 6%;
-  --border: 216 24% 90%;
+  --secondary: 168 22% 92%;
+  --secondary-foreground: 174 40% 8%;
+  --muted: 168 20% 93%;
+  --muted-foreground: 174 12% 36%;
+  --accent: 168 22% 92%;
+  --accent-foreground: 174 40% 8%;
+  --border: 168 18% 88%;
   --input: 0 0% 100%;
-  --ring: 221 68% 50%;
+  --ring: 173 80% 26%;
   --destructive: 5 71% 45%;
   --destructive-foreground: 0 0% 100%;
 
@@ -84,25 +108,25 @@
 }
 
 .dark {
-  --background: 220 24% 6%;
-  --foreground: 216 24% 90%;
-  --card: 220 22% 9%;
-  --card-foreground: 216 24% 90%;
-  --popover: 220 22% 9%;
-  --popover-foreground: 216 24% 90%;
-  --primary: 220 91% 63%;
-  --primary-foreground: 220 60% 9%;
-  --secondary: 217 20% 13%;
-  --secondary-foreground: 216 24% 90%;
-  --muted: 216 22% 12%;
-  --muted-foreground: 216 12% 63%;
-  --accent: 216 22% 12%;
-  --accent-foreground: 216 24% 90%;
-  --border: 216 22% 17%;
-  --input: 216 24% 11%;
-  --ring: 220 91% 63%;
+  --background: 174 28% 6%;
+  --foreground: 168 24% 92%;
+  --card: 174 24% 9%;
+  --card-foreground: 168 24% 92%;
+  --popover: 174 24% 9%;
+  --popover-foreground: 168 24% 92%;
+  --primary: 172 66% 50%;
+  --primary-foreground: 174 40% 8%;
+  --secondary: 174 18% 14%;
+  --secondary-foreground: 168 24% 92%;
+  --muted: 174 16% 13%;
+  --muted-foreground: 168 12% 62%;
+  --accent: 174 16% 13%;
+  --accent-foreground: 168 24% 92%;
+  --border: 174 16% 17%;
+  --input: 174 18% 11%;
+  --ring: 172 66% 50%;
   --destructive: 5 84% 63%;
-  --destructive-foreground: 220 24% 6%;
+  --destructive-foreground: 174 28% 6%;
 
   --success: 156 61% 47%;
   --success-weak: 156 42% 12%;

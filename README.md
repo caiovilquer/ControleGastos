@@ -1,4 +1,4 @@
-# Controle de Gastos Residenciais
+# CasaConta — Controle de Gastos Residenciais
 
 [![CI](https://github.com/caiovilquer/ControleGastos/actions/workflows/ci.yml/badge.svg)](https://github.com/caiovilquer/ControleGastos/actions/workflows/ci.yml)
 
@@ -31,6 +31,11 @@ Sistema para cadastro de pessoas, registro de receitas e despesas, e consulta de
 
 - Receitas, despesas e saldo por pessoa, mais o consolidado geral.
 - Os totais são calculados exclusivamente no backend; o frontend apenas exibe o resultado.
+- Gráfico de barras (receitas × despesas por pessoa), barra de composição no hero e insights derivados dos totais (ex.: menor de idade, saldo negativo).
+
+### Extras de UX
+
+- Marca **CasaConta** (teal), filtros de lançamentos por pessoa/tipo, animação ao trocar de aba e contagem animada do saldo.
 
 ## Stack e decisões
 
@@ -43,9 +48,10 @@ Sistema para cadastro de pessoas, registro de receitas e despesas, e consulta de
 | Enums como string no JSON (`JsonStringEnumConverter`) | Valores como `"Despesa"`/`"Receita"` deixam a API autoexplicativa no Swagger e no frontend. |
 | Agregação de totais em memória | O provider SQLite do EF Core não traduz `Sum` sobre `decimal` para SQL; a projeção traz só as colunas necessárias e a agregação ocorre em LINQ. |
 | Cascade delete explícito no `OnModelCreating` | `OnDelete(DeleteBehavior.Cascade)` na relação pessoa→transações, com testes cobrindo o comportamento. |
-| Seed idempotente só em Development | Popula banco vazio no startup de desenvolvimento; não roda fora desse ambiente. |
+| Seed idempotente só em Development | Popula banco vazio com 6 pessoas (2 menores) no startup de desenvolvimento; não roda fora desse ambiente. O gráfico de totais troca para barras horizontais a partir da 7ª pessoa. |
 | Testes em duas camadas (services + HTTP) | Services cobrem regras com SQLite in-memory; `WebApplicationFactory` valida o pipeline HTTP real (status codes, JSON, FluentValidation). |
-| Vitest + Testing Library no frontend | Cobre UX da regra de menor de idade, validação de formulários e o cliente HTTP sem depender do backend rodando. |
+| Vitest + Testing Library no frontend | Cobre UX da regra de menor de idade, validação de formulários, filtros de lançamentos e o cliente HTTP. |
+| Identidade CasaConta (teal) + gráfico de totais | Sai do azul shadcn padrão; Recharts só na tela de totais, com dados já agregados pela API. |
 
 ## Como executar
 

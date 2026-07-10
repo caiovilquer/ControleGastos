@@ -16,7 +16,7 @@ export function PessoasPage() {
   }
 
   return (
-    <div className="flex max-w-[1120px] flex-wrap items-start gap-5">
+    <div className="flex w-full flex-wrap items-start gap-5">
       <Card className="min-w-[280px] flex-[0_1_340px] rounded-2xl p-5.5 shadow-sm">
         <CardTitle className="font-display text-base font-semibold">Adicionar pessoa</CardTitle>
         <CardDescription className="text-sm">Cadastre um membro da residência</CardDescription>

@@ -1,18 +1,28 @@
+import { useState } from "react"
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { usePessoas } from "@/hooks/usePessoas"
 import { useTransacoes } from "@/hooks/useTransacoes"
 
 import { TransacaoForm } from "./TransacaoForm"
-import { TransacoesTable } from "./TransacoesTable"
+import { TransacoesTable, type FiltroTipo } from "./TransacoesTable"
 
 export function TransacoesPage() {
-  // Reutiliza usePessoas só para popular o select do formulário; a aba
-  // Pessoas tem sua própria instância independente do hook.
+  // Reutiliza usePessoas só para popular o select do formulário e os
+  // filtros da lista; a aba Pessoas tem sua própria instância do hook.
   const { pessoas, loading: pessoasCarregando } = usePessoas()
   const { transacoes, loading, criar } = useTransacoes()
 
+  const [filtroPessoaId, setFiltroPessoaId] = useState("todas")
+  const [filtroTipo, setFiltroTipo] = useState<FiltroTipo>("Todos")
+
+  function limparFiltros() {
+    setFiltroPessoaId("todas")
+    setFiltroTipo("Todos")
+  }
+
   return (
-    <div className="flex max-w-[1120px] flex-wrap items-start gap-5">
+    <div className="flex w-full flex-wrap items-start gap-5">
       <Card className="min-w-[280px] flex-[0_1_360px] rounded-2xl p-5.5 shadow-sm">
         <CardTitle className="font-display text-base font-semibold">Nova transação</CardTitle>
         <CardDescription className="text-sm">Registre uma receita ou despesa</CardDescription>
@@ -27,7 +37,16 @@ export function TransacoesPage() {
           </span>
         </CardHeader>
         <CardContent className="p-0">
-          <TransacoesTable transacoes={transacoes} loading={loading} />
+          <TransacoesTable
+            transacoes={transacoes}
+            loading={loading}
+            pessoas={pessoas}
+            filtroPessoaId={filtroPessoaId}
+            filtroTipo={filtroTipo}
+            onFiltroPessoaChange={setFiltroPessoaId}
+            onFiltroTipoChange={setFiltroTipo}
+            onLimparFiltros={limparFiltros}
+          />
         </CardContent>
       </Card>
     </div>
