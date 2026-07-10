@@ -1,5 +1,6 @@
-import '@testing-library/jest-dom/vitest'
-import { vi } from 'vitest'
+import "@testing-library/jest-dom/vitest"
+import { cleanup } from "@testing-library/react"
+import { afterEach, vi } from "vitest"
 
 // Polyfills mínimos para Radix Select/Dialog no jsdom (Pointer Capture
 // e scrollIntoView não existem nesse ambiente).
@@ -14,4 +15,8 @@ class ResizeObserverStub {
   disconnect() {}
 }
 
-vi.stubGlobal('ResizeObserver', ResizeObserverStub)
+vi.stubGlobal("ResizeObserver", ResizeObserverStub)
+
+afterEach(() => {
+  cleanup()
+})

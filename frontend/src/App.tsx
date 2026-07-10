@@ -38,9 +38,9 @@ function App() {
           key={pagina}
           className="mx-auto w-full max-w-[1280px] animate-page-in px-4 pt-5 pb-24 sm:px-8 sm:pt-7 sm:pb-12 xl:max-w-[1480px] xl:px-10"
         >
-          {/* Cada página é montada/desmontada ao trocar de navegação — os
-              hooks de dados (usePessoas/useTransacoes/useTotais) recarregam
-              no mount, então a tela sempre reflete mudanças feitas alhures. */}
+          {/* Cada página é montada/desmontada ao trocar de navegação.
+              O TanStack Query mantém o cache: troca de aba reusa dados
+              frescos; criar/excluir invalida as queries relacionadas. */}
           {pagina === "totais" && <TotaisPage onNavegarParaTransacoes={() => setPagina("transacoes")} />}
           {pagina === "pessoas" && <PessoasPage />}
           {pagina === "transacoes" && <TransacoesPage />}

@@ -1,7 +1,9 @@
-import { useCallback, useEffect, useState } from "react"
+import { useEffect } from "react"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { toast } from "sonner"
 
 import { api, ApiError } from "@/lib/api"
+import { queryKeys } from "@/lib/queryKeys"
 import type { Pessoa } from "@/types"
 
 export interface CriarPessoaInput {
@@ -9,64 +11,84 @@ export interface CriarPessoaInput {
   idade: number
 }
 
+function mensagemErro(err: unknown, fallback: string) {
+  return err instanceof ApiError ? err.message : fallback
+}
+
 export function usePessoas() {
-  const [pessoas, setPessoas] = useState<Pessoa[]>([])
-  const [loading, setLoading] = useState(true)
-  const [erro, setErro] = useState<string | null>(null)
+  const queryClient = useQueryClient()
 
-  const listar = useCallback(async () => {
-    setLoading(true)
-    setErro(null)
-    try {
-      const dados = await api.get<Pessoa[]>("/api/pessoas")
-      setPessoas(dados)
-    } catch (err) {
-      const mensagem = err instanceof ApiError ? err.message : "Falha ao carregar pessoas."
-      setErro(mensagem)
-      toast.error(mensagem)
-    } finally {
-      setLoading(false)
-    }
-  }, [])
+  const query = useQuery({
+    queryKey: queryKeys.pessoas,
+    queryFn: () => api.get<Pessoa[]>("/api/pessoas"),
+  })
 
-  // Carrega a lista uma vez ao montar; mutações abaixo revalidam chamando
-  // listar() novamente em vez de atualizar o estado local otimisticamente,
-  // mantendo a lista sempre consistente com o backend.
   useEffect(() => {
-    listar()
-  }, [listar])
+    if (query.error) {
+      toast.error(mensagemErro(query.error, "Falha ao carregar pessoas."))
+    }
+  }, [query.error])
 
-  const criar = useCallback(
-    async (input: CriarPessoaInput) => {
-      try {
-        await api.post<Pessoa>("/api/pessoas", input)
-        toast.success("Pessoa cadastrada com sucesso.")
-        await listar()
-        return true
-      } catch (err) {
-        const mensagem = err instanceof ApiError ? err.message : "Falha ao cadastrar pessoa."
-        toast.error(mensagem)
-        return false
-      }
+  // Criar/excluir pessoa afeta listas e totais (cascade delete remove
+  // transações), então invalidamos os três caches relacionados.
+  const criarMutation = useMutation({
+    mutationFn: (input: CriarPessoaInput) => api.post<Pessoa>("/api/pessoas", input),
+    onSuccess: async () => {
+      toast.success("Pessoa cadastrada com sucesso.")
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: queryKeys.pessoas }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.transacoes }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.totais }),
+      ])
     },
-    [listar]
-  )
-
-  const excluir = useCallback(
-    async (id: number) => {
-      try {
-        await api.delete(`/api/pessoas/${id}`)
-        toast.success("Pessoa excluída com sucesso.")
-        await listar()
-        return true
-      } catch (err) {
-        const mensagem = err instanceof ApiError ? err.message : "Falha ao excluir pessoa."
-        toast.error(mensagem)
-        return false
-      }
+    onError: (err) => {
+      toast.error(mensagemErro(err, "Falha ao cadastrar pessoa."))
     },
-    [listar]
-  )
+  })
 
-  return { pessoas, loading, erro, listar, criar, excluir }
+  const excluirMutation = useMutation({
+    mutationFn: (id: number) => api.delete(`/api/pessoas/${id}`),
+    onSuccess: async () => {
+      toast.success("Pessoa excluída com sucesso.")
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: queryKeys.pessoas }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.transacoes }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.totais }),
+      ])
+    },
+    onError: (err) => {
+      toast.error(mensagemErro(err, "Falha ao excluir pessoa."))
+    },
+  })
+
+  const criar = async (input: CriarPessoaInput) => {
+    try {
+      await criarMutation.mutateAsync(input)
+      return true
+    } catch {
+      return false
+    }
+  }
+
+  const excluir = async (id: number) => {
+    try {
+      await excluirMutation.mutateAsync(id)
+      return true
+    } catch {
+      return false
+    }
+  }
+
+  const listar = () => queryClient.invalidateQueries({ queryKey: queryKeys.pessoas })
+
+  return {
+    pessoas: query.data ?? [],
+    // isPending = primeira carga sem cache; com cache fresco a troca de
+    // aba não mostra skeleton de novo.
+    loading: query.isPending,
+    erro: query.error ? mensagemErro(query.error, "Falha ao carregar pessoas.") : null,
+    listar,
+    criar,
+    excluir,
+  }
 }

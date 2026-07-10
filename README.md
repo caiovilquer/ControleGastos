@@ -36,6 +36,7 @@ Sistema para cadastro de pessoas, registro de receitas e despesas, e consulta de
 ### Extras de UX
 
 - Marca **CasaConta** (teal), filtros de lançamentos por pessoa/tipo, animação ao trocar de aba e contagem animada do saldo.
+- Cache de dados no frontend (TanStack Query): trocar de aba reusa o cache; mutações invalidam as queries afetadas.
 
 ## Stack e decisões
 
@@ -52,6 +53,7 @@ Sistema para cadastro de pessoas, registro de receitas e despesas, e consulta de
 | Testes em duas camadas (services + HTTP) | Services cobrem regras com SQLite in-memory; `WebApplicationFactory` valida o pipeline HTTP real (status codes, JSON, FluentValidation). |
 | Vitest + Testing Library no frontend | Cobre UX da regra de menor de idade, validação de formulários, filtros de lançamentos e o cliente HTTP. |
 | Identidade CasaConta (teal) + gráfico de totais | Sai do azul shadcn padrão; Recharts só na tela de totais, com dados já agregados pela API. |
+| TanStack Query no frontend | Cache compartilhado entre abas (`staleTime` 30s); criar/excluir invalida `pessoas`/`transacoes`/`totais` via `invalidateQueries`, sem refetch a cada troca de guia. |
 
 ## Como executar
 
