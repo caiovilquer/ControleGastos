@@ -32,9 +32,7 @@ function normalizarValor(valor: string): string {
   return valor
 }
 
-// Validação de formato no cliente. A regra de negócio (menor de idade só
-// pode despesa) fica só no backend nesta tarefa — aqui só checamos que os
-// campos estão preenchidos e a forma do valor é válida.
+// Validação de formato no cliente; regra de menor só despesa fica no backend.
 function validar(pessoaId: string, descricao: string, valor: string): string | null {
   if (!pessoaId) return "Selecione uma pessoa."
   if (descricao.trim().length === 0) return "Informe a descrição."
@@ -63,11 +61,7 @@ export function TransacaoForm({ pessoas, pessoasCarregando, onSubmit }: Transaca
   const pessoaSelecionada = pessoas.find((p) => String(p.id) === pessoaId)
   const pessoaMenorDeIdade = (pessoaSelecionada?.idade ?? 0) < 18 && pessoaSelecionada !== undefined
 
-  // Antecipação da regra de negócio no cliente, só para UX: a validação
-  // de verdade continua no backend (que responde 422 se for burlada, por
-  // exemplo trocando a pessoa depois de já ter marcado Receita).
-  // Se a pessoa selecionada mudar para uma menor de idade enquanto
-  // "Receita" estava marcado, volta automaticamente para "Despesa".
+  // Se trocar para menor com Receita marcada, volta para Despesa.
   useEffect(() => {
     if (pessoaMenorDeIdade && tipo === "Receita") {
       setTipo("Despesa")
@@ -197,8 +191,6 @@ export function TransacaoForm({ pessoas, pessoasCarregando, onSubmit }: Transaca
           </button>
         </div>
 
-        {/* Regra de negócio central antecipada no cliente por UX: a
-            validação de verdade continua no backend (422). */}
         {pessoaMenorDeIdade && (
           <div className="flex gap-2.5 rounded-[10px] border border-warn-weak bg-warn-weak p-3">
             <span className="flex size-4.5 shrink-0 items-center justify-center rounded-full bg-warn text-xs font-bold text-card">

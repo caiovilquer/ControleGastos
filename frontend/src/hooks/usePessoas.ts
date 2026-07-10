@@ -29,12 +29,11 @@ export function usePessoas() {
     }
   }, [query.error])
 
-  // Criar/excluir pessoa afeta listas e totais (cascade delete remove
-  // transações), então invalidamos os três caches relacionados.
   const criarMutation = useMutation({
     mutationFn: (input: CriarPessoaInput) => api.post<Pessoa>("/api/pessoas", input),
     onSuccess: async () => {
       toast.success("Pessoa cadastrada com sucesso.")
+      // Totais lista todas as pessoas (mesmo sem lançamentos).
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: queryKeys.pessoas }),
         queryClient.invalidateQueries({ queryKey: queryKeys.transacoes }),
@@ -50,6 +49,7 @@ export function usePessoas() {
     mutationFn: (id: number) => api.delete(`/api/pessoas/${id}`),
     onSuccess: async () => {
       toast.success("Pessoa excluída com sucesso.")
+      // Cascade no backend remove as transações da pessoa.
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: queryKeys.pessoas }),
         queryClient.invalidateQueries({ queryKey: queryKeys.transacoes }),
@@ -83,8 +83,7 @@ export function usePessoas() {
 
   return {
     pessoas: query.data ?? [],
-    // isPending = primeira carga sem cache; com cache fresco a troca de
-    // aba não mostra skeleton de novo.
+    // isPending: sem cache ainda; com cache fresco a troca de aba não pisca skeleton.
     loading: query.isPending,
     erro: query.error ? mensagemErro(query.error, "Falha ao carregar pessoas.") : null,
     listar,

@@ -58,14 +58,10 @@ public class TransacaoService : ITransacaoService
 
     public async Task<TransacaoResponse> CriarAsync(CriarTransacaoRequest request, CancellationToken cancellationToken)
     {
-        // Regra do desafio: o identificador da pessoa precisa existir
-        // previamente no cadastro.
         var pessoa = await _dbContext.Pessoas.FindAsync(new object?[] { request.PessoaId }, cancellationToken)
             ?? throw new RecursoNaoEncontradoException($"Pessoa {request.PessoaId} não encontrada.");
 
-        // Regra do desafio: menores de idade só podem cadastrar despesas.
-        // A comparação é estritamente "< 18": aos 18 anos exatos a pessoa já
-        // pode cadastrar receitas.
+        // Menores (< 18) só despesa; aos 18 já pode cadastrar receita.
         if (pessoa.Idade < 18 && request.Tipo == TipoTransacao.Receita)
         {
             throw new RegraDeNegocioException("Menores de 18 anos só podem cadastrar despesas.");
@@ -93,6 +89,7 @@ public class TransacaoService : ITransacaoService
         };
     }
 
+    // EF traduz Pessoa!.Nome em JOIN; o ! só satisfaz o compilador (FK garante a linha).
     private static readonly System.Linq.Expressions.Expression<Func<Transacao, TransacaoResponse>> ParaResponse = t => new TransacaoResponse
     {
         Id = t.Id,

@@ -8,10 +8,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace ControleGastos.Tests.Helpers;
 
-// Sobe a API real via WebApplicationFactory, trocando só o banco por
-// SQLite in-memory. Assim os testes HTTP exercitam pipeline completo
-// (controllers, FluentValidation, exception handler, serialização JSON)
-// sem depender de arquivo em disco nem do seed de Development.
+// API real + SQLite in-memory (sem arquivo nem seed de Development).
 public class ControleGastosWebApplicationFactory : WebApplicationFactory<Program>
 {
     private readonly SqliteConnection _connection = new("Data Source=:memory:");
@@ -20,8 +17,7 @@ public class ControleGastosWebApplicationFactory : WebApplicationFactory<Program
     {
         _connection.Open();
 
-        // "Testing" evita o seed de Development e mantém o foco no
-        // comportamento da API (sem depender de dados de demonstração).
+        // Testing evita o seed de Development.
         builder.UseEnvironment("Testing");
 
         builder.ConfigureServices(services =>
@@ -34,8 +30,7 @@ public class ControleGastosWebApplicationFactory : WebApplicationFactory<Program
         });
     }
 
-    // Limpa as tabelas entre testes sem recriar a conexão in-memory
-    // (EnsureDeleted fecharia o banco :memory: compartilhado).
+    // Limpa tabelas sem EnsureDeleted — isso fecharia o :memory: compartilhado.
     public async Task ResetDatabaseAsync()
     {
         using var scope = Services.CreateScope();

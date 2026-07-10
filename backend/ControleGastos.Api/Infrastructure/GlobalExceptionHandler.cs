@@ -4,8 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ControleGastos.Api.Infrastructure;
 
-// Centraliza o mapeamento de exceções de negócio para status HTTP,
-// evitando try/catch repetido em cada controller.
+// Centraliza exceções de negócio → status HTTP.
 public class GlobalExceptionHandler : IExceptionHandler
 {
     private readonly ILogger<GlobalExceptionHandler> _logger;

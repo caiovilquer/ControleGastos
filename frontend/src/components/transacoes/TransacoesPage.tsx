@@ -8,8 +8,6 @@ import { TransacaoForm } from "./TransacaoForm"
 import { TransacoesTable, type FiltroTipo } from "./TransacoesTable"
 
 export function TransacoesPage() {
-  // Reutiliza usePessoas só para popular o select do formulário e os
-  // filtros da lista; a aba Pessoas tem sua própria instância do hook.
   const { pessoas, loading: pessoasCarregando } = usePessoas()
   const { transacoes, loading, criar } = useTransacoes()
 

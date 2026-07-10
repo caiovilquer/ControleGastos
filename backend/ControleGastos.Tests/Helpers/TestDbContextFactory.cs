@@ -24,6 +24,7 @@ public class TestDbContextFactory : IDisposable
             .Options;
 
         DbContext = new AppDbContext(options);
+        // Unitários: schema pelo modelo. Integração usa Migrate() via Program.
         DbContext.Database.EnsureCreated();
     }
 

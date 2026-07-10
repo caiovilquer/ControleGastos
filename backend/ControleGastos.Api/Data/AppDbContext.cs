@@ -31,8 +31,7 @@ public class AppDbContext : DbContext
             entity.Property(t => t.Valor)
                 .HasPrecision(18, 2);
 
-            // Regra de negócio do desafio: deletar uma pessoa apaga suas
-            // transações (cascade delete).
+            // Deletar pessoa apaga as transações vinculadas.
             entity.HasOne(t => t.Pessoa)
                 .WithMany(p => p.Transacoes)
                 .HasForeignKey(t => t.PessoaId)

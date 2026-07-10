@@ -26,15 +26,12 @@ public class TotaisServiceTests : IDisposable
         dbContext.Pessoas.AddRange(pessoaA, pessoaB, pessoaC);
         await dbContext.SaveChangesAsync();
 
-        // Pessoa A: receitas e despesas -> saldo positivo.
         dbContext.Transacoes.Add(TestDataBuilder.CriarTransacao(pessoaA.Id, "Salário", 3000m, TipoTransacao.Receita));
         dbContext.Transacoes.Add(TestDataBuilder.CriarTransacao(pessoaA.Id, "Aluguel", 1200m, TipoTransacao.Despesa));
 
-        // Pessoa B: só despesas -> saldo negativo.
         dbContext.Transacoes.Add(TestDataBuilder.CriarTransacao(pessoaB.Id, "Mercado", 500m, TipoTransacao.Despesa));
         dbContext.Transacoes.Add(TestDataBuilder.CriarTransacao(pessoaB.Id, "Conta", 300m, TipoTransacao.Despesa));
 
-        // Pessoa C: sem transações -> totais zerados.
         await dbContext.SaveChangesAsync();
 
         var totais = await _service.ObterTotaisAsync(CancellationToken.None);

@@ -34,13 +34,11 @@ function App() {
       <main className="h-svh min-w-0 flex-1 overflow-x-hidden overflow-y-auto">
         <Header titulo={titulo} subtitulo={subtitulo} dark={dark} onToggleDark={toggle} />
 
+        {/* key remonta a aba (animate-page-in); pb-24 reserva a MobileNav fixa. */}
         <div
           key={pagina}
           className="mx-auto w-full max-w-[1280px] animate-page-in px-4 pt-5 pb-24 sm:px-8 sm:pt-7 sm:pb-12 xl:max-w-[1480px] xl:px-10"
         >
-          {/* Cada página é montada/desmontada ao trocar de navegação.
-              O TanStack Query mantém o cache: troca de aba reusa dados
-              frescos; criar/excluir invalida as queries relacionadas. */}
           {pagina === "totais" && <TotaisPage onNavegarParaTransacoes={() => setPagina("transacoes")} />}
           {pagina === "pessoas" && <PessoasPage />}
           {pagina === "transacoes" && <TransacoesPage />}

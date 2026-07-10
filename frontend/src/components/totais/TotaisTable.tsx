@@ -90,12 +90,6 @@ export function TotaisTable({ totais, loading, idadePorPessoa }: TotaisTableProp
           )
         })}
       </TableBody>
-      {/*
-        Os totais gerais vêm prontos do backend (TotaisGeralResponse) e são
-        apenas exibidos aqui — o cálculo é responsabilidade da API, nunca
-        recalculado no frontend, para não haver dois lugares divergentes
-        somando os mesmos números.
-      */}
       <TableFooter className="border-t-2 border-border bg-muted">
         <TableRow className="hover:bg-transparent">
           <TableCell className="px-5 py-[13px] text-sm font-bold">Total geral</TableCell>

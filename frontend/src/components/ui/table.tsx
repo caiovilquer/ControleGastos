@@ -6,6 +6,7 @@ import { ScrollFade } from "@/components/shared/ScrollFade"
 import { cn } from "@/lib/utils"
 
 function Table({ className, ...props }: React.ComponentProps<"table">) {
+  // Scroll horizontal + fade nas bordas em todas as tabelas (mobile).
   return (
     <ScrollFade>
       <table

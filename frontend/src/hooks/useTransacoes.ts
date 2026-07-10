@@ -31,9 +31,6 @@ export function useTransacoes() {
     }
   }, [query.error])
 
-  // A regra de menor de idade fica só no backend: um 422 aqui é apenas
-  // repassado ao usuário via toast com a mensagem do ProblemDetails.
-  // Nova transação muda a lista e os totais agregados.
   const criarMutation = useMutation({
     mutationFn: (input: CriarTransacaoInput) =>
       api.post<Transacao>("/api/transacoes", input),

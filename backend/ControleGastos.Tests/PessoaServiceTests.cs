@@ -18,8 +18,6 @@ public class PessoaServiceTests : IDisposable
         _service = new PessoaService(_factory.DbContext);
     }
 
-    // Teste de fumaça: prova que a infraestrutura de testes (SQLite
-    // in-memory + AppDbContext real) funciona ponta a ponta.
     [Fact]
     public async Task CriarAsync_DevePermitirLerAPessoaDeVoltaComObterPorId()
     {
@@ -47,10 +45,7 @@ public class PessoaServiceTests : IDisposable
             () => _service.ExcluirAsync(999, CancellationToken.None));
     }
 
-    // TESTE CENTRAL: prova, via SQLite in-memory, que o cascade delete
-    // configurado em AppDbContext (OnDelete(DeleteBehavior.Cascade)) remove
-    // as transações de uma pessoa quando ela é excluída — regra de negócio
-    // do desafio. A verificação é feita direto no DbContext, não via DTO.
+    // Verifica cascade delete no DbContext (não via DTO).
     [Fact]
     public async Task ExcluirAsync_DeveRemoverTodasAsTransacoesVinculadas_QuandoPessoaEExcluida()
     {

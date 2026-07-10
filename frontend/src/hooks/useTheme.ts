@@ -8,9 +8,6 @@ function lerPreferenciaInicial(): boolean {
   return window.matchMedia("(prefers-color-scheme: dark)").matches
 }
 
-// Hook de UI puro (não é regra de negócio nem chama a API): controla a
-// classe "dark" no <html>, exigida pelo esquema de cores do shadcn, e
-// persiste a preferência do usuário entre sessões.
 export function useTheme() {
   const [dark, setDark] = useState(lerPreferenciaInicial)
 

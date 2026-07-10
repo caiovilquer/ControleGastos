@@ -100,9 +100,6 @@ export function PessoasTable({ pessoas, loading, onExcluir, contarTransacoes }: 
                 {pessoa.idade} anos
               </TableCell>
               <TableCell className="px-5 py-[13px] text-right">
-                {/* Confirmação explícita: excluir uma pessoa remove em
-                    cascata todas as transações dela (regra do desafio),
-                    então o usuário precisa confirmar antes de perder dados. */}
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
                     <Button

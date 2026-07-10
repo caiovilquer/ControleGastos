@@ -9,14 +9,13 @@ interface AnimatedSaldoProps {
   durationMs?: number
 }
 
-// Contagem rápida do saldo ao montar / mudar o valor — presença sem
-// distrair. Usa ease-out para desacelerar no final.
 export function AnimatedSaldo({ valor, className, durationMs = 700 }: AnimatedSaldoProps) {
   const [exibido, setExibido] = useState(0)
   const inicioRef = useRef<number | null>(null)
   const deRef = useRef(0)
   const frameRef = useRef<number>(0)
 
+  // Interpola do último valor exibido (ease-out cúbico) ao atualizar totais.
   useEffect(() => {
     const de = deRef.current
     const para = valor

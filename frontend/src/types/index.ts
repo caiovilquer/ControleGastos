@@ -1,5 +1,3 @@
-// Tipos espelhando os DTOs de resposta do backend (ControleGastos.Api/DTOs).
-
 export type TipoTransacao = "Despesa" | "Receita"
 
 export interface Pessoa {

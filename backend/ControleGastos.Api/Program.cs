@@ -9,8 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 const string CorsPolicyName = "Default";
 
-// Enums trafegam como "Despesa"/"Receita" em vez de 0/1, tornando a API
-// autoexplicativa no Swagger e no frontend.
+// Enums como "Despesa"/"Receita" em vez de 0/1.
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
         options.JsonSerializerOptions.Converters.Add(
@@ -29,8 +28,7 @@ builder.Services.AddCors(options =>
     });
 });
 
-// Validação automática de formato via FluentValidation (regras de negócio
-// permanecem nos services, não nos validators).
+// FluentValidation cobre formato; regras de negócio ficam nos services.
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 builder.Services.AddFluentValidationAutoValidation();
 
@@ -41,8 +39,6 @@ builder.Services.AddScoped<ITotaisService, TotaisService>();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Centraliza o mapeamento de exceções de negócio para status HTTP e evita
-// try/catch repetido em cada controller.
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
 
@@ -50,15 +46,12 @@ var app = builder.Build();
 
 app.UseExceptionHandler();
 
-// Aplica migrations automaticamente no startup para permitir ao avaliador
-// rodar o projeto sem passos manuais de banco de dados.
+// Migrate no startup evita passo manual de banco ao subir a API.
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     db.Database.Migrate();
 
-    // Dados de demonstração não pertencem a um ambiente real: só rodam em
-    // Development, para reduzir o atrito de quem for avaliar o desafio.
     if (app.Environment.IsDevelopment())
     {
         await DbSeeder.SeedAsync(db);

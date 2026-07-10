@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ControleGastos.Api.Controllers;
 
-// Sem DELETE: o desafio pede apenas criação e listagem de transações.
 [ApiController]
 [Route("api/[controller]")]
 public class TransacoesController : ControllerBase

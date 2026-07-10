@@ -7,8 +7,7 @@ import { PessoasTable } from "./PessoasTable"
 
 export function PessoasPage() {
   const { pessoas, loading, criar, excluir } = usePessoas()
-  // Reutilizado só para contar quantas transações cada pessoa tem, exibido
-  // no dialog de confirmação de exclusão (peso visual da regra de cascade).
+  // Contagem de transações no dialog de exclusão (cascade).
   const { transacoes } = useTransacoes()
 
   function contarTransacoes(pessoaId: number) {

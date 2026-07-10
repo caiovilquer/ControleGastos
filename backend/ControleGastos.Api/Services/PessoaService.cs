@@ -17,8 +17,6 @@ public class PessoaService : IPessoaService
 
     public async Task<IReadOnlyCollection<PessoaResponse>> ListarAsync(CancellationToken cancellationToken)
     {
-        // Consulta somente leitura: AsNoTracking evita o custo de rastrear
-        // as entidades no change tracker.
         return await _dbContext.Pessoas
             .AsNoTracking()
             .Select(p => new PessoaResponse
@@ -73,9 +71,7 @@ public class PessoaService : IPessoaService
             throw new RecursoNaoEncontradoException($"Pessoa com id {id} não encontrada.");
         }
 
-        // Não é preciso remover as transações manualmente: o cascade delete
-        // configurado em AppDbContext (OnDelete(DeleteBehavior.Cascade)) faz
-        // o SQLite apagá-las junto com a pessoa — regra de negócio do desafio.
+        // Cascade no DbContext remove as transações; não apagar manualmente.
         _dbContext.Pessoas.Remove(pessoa);
         await _dbContext.SaveChangesAsync(cancellationToken);
     }

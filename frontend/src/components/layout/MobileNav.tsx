@@ -7,7 +7,6 @@ interface MobileNavProps {
   onNavegar: (pagina: Pagina) => void
 }
 
-// Navegação inferior no mobile: a sidebar lateral some abaixo de md.
 export function MobileNav({ paginaAtiva, onNavegar }: MobileNavProps) {
   return (
     <nav

@@ -59,7 +59,6 @@ export function ScrollFade({ children, className }: ScrollFadeProps) {
         aria-hidden
         className={cn(
           "pointer-events-none absolute inset-y-0 right-0 w-10 bg-gradient-to-l from-card via-card/80 to-transparent transition-opacity duration-200",
-          // Leve “blur” visual: camada extra semi-opaca reforça o corte.
           podeDireita ? "opacity-100" : "opacity-0"
         )}
       />

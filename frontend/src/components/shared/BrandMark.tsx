@@ -5,7 +5,6 @@ interface BrandMarkProps {
   size?: "sm" | "md"
 }
 
-// Marca visual da CasaConta: casinha em teal, usada na sidebar e favicon.
 export function BrandMark({ className, size = "md" }: BrandMarkProps) {
   return (
     <div

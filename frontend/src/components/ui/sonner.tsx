@@ -9,8 +9,7 @@ import {
 } from "lucide-react"
 import { Toaster as Sonner, type ToasterProps } from "sonner"
 
-// Sem next-themes (projeto não usa Next.js): o tema segue a preferência do
-// sistema via prefers-color-scheme.
+// theme="system": sem next-themes neste projeto Vite.
 const Toaster = ({ ...props }: ToasterProps) => {
   return (
     <Sonner
@@ -32,10 +31,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
         } as React.CSSProperties
       }
       toastOptions={{
-        // Barra lateral de 4px: verde no sucesso, vermelha no erro — reforça
-        // visualmente o resultado da ação sem precisar ler o texto. O "!"
-        // (important) é necessário porque o CSS interno do sonner define
-        // "border" (shorthand) com a mesma especificidade e ordem posterior.
+        // !important: o CSS do sonner redefine "border" com mesma especificidade.
         classNames: {
           title: "font-bold text-sm",
           description: "text-sm text-muted-foreground mt-0.5",

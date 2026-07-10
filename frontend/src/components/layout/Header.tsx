@@ -15,7 +15,6 @@ export function Header({ titulo, subtitulo, dark, onToggleDark }: HeaderProps) {
     <header className="sticky top-0 z-20 border-b border-border bg-background/95 backdrop-blur-md">
       <div className="mx-auto flex w-full max-w-[1280px] items-center justify-between gap-3 px-4 py-3 sm:px-8 sm:py-4.5 xl:max-w-[1480px] xl:px-10">
         <div className="flex min-w-0 items-center gap-3">
-          {/* Marca só no mobile — no desktop ela vive na sidebar. */}
           <BrandMark size="sm" className="md:hidden" />
           <div className="min-w-0">
             <h1 className="font-display truncate text-lg font-semibold sm:text-[22px]">

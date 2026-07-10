@@ -3,8 +3,6 @@ using FluentValidation;
 
 namespace ControleGastos.Api.Validators;
 
-// Apenas validação de formato. Regras de negócio (ex.: menor de idade só
-// pode registrar despesa, pessoa precisa existir) ficam nos services.
 public class CriarTransacaoRequestValidator : AbstractValidator<CriarTransacaoRequest>
 {
     public CriarTransacaoRequestValidator()

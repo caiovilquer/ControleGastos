@@ -5,8 +5,6 @@ using ControleGastos.Tests.Helpers;
 
 namespace ControleGastos.Tests.Integration;
 
-// Testes HTTP ponta a ponta: sobem a API real (WebApplicationFactory) e
-// validam status codes, serialização JSON e regras de negócio via HTTP.
 public class PessoasApiTests : IClassFixture<ControleGastosWebApplicationFactory>, IAsyncLifetime
 {
     private readonly ControleGastosWebApplicationFactory _factory;
@@ -18,6 +16,7 @@ public class PessoasApiTests : IClassFixture<ControleGastosWebApplicationFactory
         _client = factory.CreateClient();
     }
 
+    // IClassFixture compartilha o SQLite :memory:; limpa antes de cada teste.
     public async Task InitializeAsync() => await _factory.ResetDatabaseAsync();
 
     public Task DisposeAsync() => Task.CompletedTask;

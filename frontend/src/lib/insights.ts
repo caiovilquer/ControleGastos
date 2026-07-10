@@ -13,9 +13,7 @@ export function juntarNomes(nomes: string[]): string {
   return `${nomes.slice(0, -1).join(", ")} e ${nomes[nomes.length - 1]}`
 }
 
-// Gera 1–2 frases curtas a partir dos totais — reforça a regra de negócio
-// (menor só despesa) e o estado financeiro da casa sem recalcular no front
-// além do que a API já entregou.
+// Deriva frases curtas dos totais da API (sem recalcular no cliente).
 export function gerarInsights(
   totais: TotaisGeral,
   idadePorPessoa: Map<number, number>,
@@ -25,6 +23,7 @@ export function gerarInsights(
 
   const insights: Insight[] = []
 
+  // Sem idade no mapa (pessoas ainda carregando), assume adulto.
   const menores = totais.pessoas.filter((p) => (idadePorPessoa.get(p.id) ?? 18) < 18)
   if (menores.length > 0) {
     const nomes = juntarNomes(menores.map((p) => p.nome))
@@ -55,6 +54,7 @@ export function gerarInsights(
     })
   }
 
+  // No máximo 2 frases no card.
   return insights.slice(0, 2)
 }
 

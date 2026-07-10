@@ -3,8 +3,8 @@ interface ReceitaDespesaBarProps {
   despesas: number
 }
 
-// Barra proporcional receita vs despesa no hero — sem lib de chart.
 export function ReceitaDespesaBar({ receitas, despesas }: ReceitaDespesaBarProps) {
+  // Percentual sobre receitas+despesas (fluxo), não sobre saldo.
   const total = receitas + despesas
   if (total <= 0) return null
 

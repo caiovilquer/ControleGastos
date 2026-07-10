@@ -26,17 +26,13 @@ interface TotaisPageProps {
 
 export function TotaisPage({ onNavegarParaTransacoes }: TotaisPageProps) {
   const { totais, loading } = useTotais()
-  // Reutilizado só para exibir "{N} lançamentos" no hero; TotaisGeralResponse
-  // não traz essa contagem, e a aba Transações já busca esses dados do
-  // mesmo jeito.
+  // Contagem de lançamentos e idade (badge) não vêm em TotaisGeralResponse.
   const { transacoes, loading: transacoesCarregando } = useTransacoes()
-  // Reutilizado só para saber a idade de cada pessoa (badge "Menor de 18"):
-  // TotaisPessoaResponse não expõe idade, então cruzamos por id aqui, sem
-  // alterar o contrato da API.
   const { pessoas } = usePessoas()
   const idadePorPessoa = new Map(pessoas.map((p) => [p.id, p.idade]))
 
   const carregando = loading || transacoesCarregando
+  // Vazio só sem pessoas; cadastro sem lançamentos ainda mostra totais zerados.
   const semDados = !carregando && (!totais || totais.pessoas.length === 0)
   const insights =
     totais && !carregando

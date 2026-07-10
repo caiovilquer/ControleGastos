@@ -16,6 +16,7 @@ public class TotaisApiTests : IClassFixture<ControleGastosWebApplicationFactory>
         _client = factory.CreateClient();
     }
 
+    // IClassFixture compartilha o SQLite :memory:; limpa antes de cada teste.
     public async Task InitializeAsync() => await _factory.ResetDatabaseAsync();
 
     public Task DisposeAsync() => Task.CompletedTask;
@@ -78,8 +79,6 @@ public class TotaisApiTests : IClassFixture<ControleGastosWebApplicationFactory>
     [Fact]
     public async Task FluxoCompleto_CriarPessoasTransacoesConsultarTotaisEExcluir()
     {
-        // Exercita o fluxo principal do desafio via HTTP, do cadastro à
-        // consulta de totais e à exclusão em cascata.
         var adulta = await CriarPessoaAsync("Fernanda", 29);
         var menor = await CriarPessoaAsync("Pedro", 15);
 

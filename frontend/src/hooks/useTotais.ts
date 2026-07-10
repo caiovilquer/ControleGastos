@@ -13,8 +13,6 @@ function mensagemErro(err: unknown, fallback: string) {
 export function useTotais() {
   const queryClient = useQueryClient()
 
-  // Totais são recalculados no backend; o cache é invalidado pelas
-  // mutações de pessoas/transações, não por refetch a cada troca de aba.
   const query = useQuery({
     queryKey: queryKeys.totais,
     queryFn: () => api.get<TotaisGeral>("/api/totais"),

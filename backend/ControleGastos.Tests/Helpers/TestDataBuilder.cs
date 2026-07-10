@@ -2,7 +2,6 @@ using ControleGastos.Api.Models;
 
 namespace ControleGastos.Tests.Helpers;
 
-// Helpers simples para montar dados de teste, sem framework de fixture.
 public static class TestDataBuilder
 {
     public static Pessoa CriarPessoa(string nome = "Pessoa Teste", int idade = 30)

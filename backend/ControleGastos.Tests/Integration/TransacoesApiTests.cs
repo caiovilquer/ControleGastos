@@ -18,6 +18,7 @@ public class TransacoesApiTests : IClassFixture<ControleGastosWebApplicationFact
         _client = factory.CreateClient();
     }
 
+    // IClassFixture compartilha o SQLite :memory:; limpa antes de cada teste.
     public async Task InitializeAsync() => await _factory.ResetDatabaseAsync();
 
     public Task DisposeAsync() => Task.CompletedTask;

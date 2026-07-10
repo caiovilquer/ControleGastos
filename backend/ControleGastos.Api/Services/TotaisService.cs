@@ -16,13 +16,8 @@ public class TotaisService : ITotaisService
 
     public async Task<TotaisGeralResponse> ObterTotaisAsync(CancellationToken cancellationToken)
     {
-        // O cálculo dos totais é responsabilidade do backend — o frontend
-        // apenas exibe o resultado. AsNoTracking porque é leitura.
-        //
-        // O provider SQLite do EF Core não traduz SUM sobre "decimal" para
-        // SQL (o tipo é armazenado como TEXT), então trazemos apenas as
-        // colunas necessárias (PessoaId, Valor, Tipo) e agregamos em
-        // memória via LINQ, em vez de usar Sum()/GroupBy() no IQueryable.
+        // SQLite/EF não traduz SUM(decimal) para SQL (armazena como TEXT),
+        // então projetamos as colunas e agregamos em memória.
         var pessoas = await _dbContext.Pessoas
             .AsNoTracking()
             .Select(p => new { p.Id, p.Nome })
@@ -33,6 +28,7 @@ public class TotaisService : ITotaisService
             .Select(t => new { t.PessoaId, t.Valor, t.Tipo })
             .ToListAsync(cancellationToken);
 
+        // Inclui toda pessoa cadastrada, mesmo sem lançamentos (totais zerados).
         var totaisPorPessoa = pessoas
             .Select(p =>
             {
@@ -46,8 +42,6 @@ public class TotaisService : ITotaisService
                     Nome = p.Nome,
                     TotalReceitas = totalReceitas,
                     TotalDespesas = totalDespesas,
-                    // Saldo pode ser negativo (despesas maiores que receitas);
-                    // isso não é um erro, apenas o resultado do cálculo.
                     Saldo = totalReceitas - totalDespesas
                 };
             })

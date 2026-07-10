@@ -9,8 +9,6 @@ interface PessoaFormProps {
   onSubmit: (input: CriarPessoaInput) => Promise<boolean>
 }
 
-// Validação de formato no cliente é só uma primeira barreira de UX; o
-// backend (FluentValidation) continua sendo a fonte de verdade das regras.
 function validar(nome: string, idade: string): string | null {
   if (nome.trim().length === 0) return "Informe o nome."
   if (nome.length > 100) return "Nome deve ter no máximo 100 caracteres."

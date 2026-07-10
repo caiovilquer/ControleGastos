@@ -14,7 +14,6 @@ interface SidebarProps {
   onToggleCollapsed: () => void
 }
 
-// Sidebar só no desktop (md+). No mobile a navegação é a MobileNav.
 export function Sidebar({
   paginaAtiva,
   onNavegar,

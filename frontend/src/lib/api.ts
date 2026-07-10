@@ -1,5 +1,3 @@
-// Wrapper fino sobre fetch para a API do backend.
-
 const BASE_URL = import.meta.env.VITE_API_URL ?? "http://localhost:5153"
 
 interface ProblemDetails {
@@ -52,6 +50,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
     throw new ApiError(message, response.status)
   }
 
+  // DELETE retorna 204 sem corpo; não chamar response.json().
   if (response.status === 204) {
     return undefined as T
   }

@@ -157,8 +157,6 @@ export function TransacoesTable({
               const receita = transacao.tipo === "Receita"
               return (
                 <TableRow key={transacao.id} className="animate-page-in">
-                  {/* Sem max-w-0/truncate: o scroll horizontal + fade já
-                      acomodam a largura; truncar escondia o nome no mobile. */}
                   <TableCell className="px-4 py-[13px] sm:px-5">
                     <div className="flex items-center gap-2.5">
                       <Avatar nome={transacao.pessoaNome} size={28} />

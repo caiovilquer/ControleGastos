@@ -36,7 +36,6 @@ public class PessoasController : ControllerBase
         return CreatedAtAction(nameof(ObterPorId), new { id = pessoa.Id }, pessoa);
     }
 
-    // Deleção remove as transações vinculadas em cascata.
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> Excluir(int id, CancellationToken cancellationToken)
     {
