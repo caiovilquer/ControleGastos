@@ -76,3 +76,6 @@ app.UseCors(CorsPolicyName);
 app.MapControllers();
 
 app.Run();
+
+// Necessário para WebApplicationFactory nos testes de integração HTTP.
+public partial class Program;

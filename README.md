@@ -44,6 +44,8 @@ Sistema para cadastro de pessoas, registro de receitas e despesas, e consulta de
 | Agregação de totais em memória | O provider SQLite do EF Core não traduz `Sum` sobre `decimal` para SQL; a projeção traz só as colunas necessárias e a agregação ocorre em LINQ. |
 | Cascade delete explícito no `OnModelCreating` | `OnDelete(DeleteBehavior.Cascade)` na relação pessoa→transações, com testes cobrindo o comportamento. |
 | Seed idempotente só em Development | Popula banco vazio no startup de desenvolvimento; não roda fora desse ambiente. |
+| Testes em duas camadas (services + HTTP) | Services cobrem regras com SQLite in-memory; `WebApplicationFactory` valida o pipeline HTTP real (status codes, JSON, FluentValidation). |
+| Vitest + Testing Library no frontend | Cobre UX da regra de menor de idade, validação de formulários e o cliente HTTP sem depender do backend rodando. |
 
 ## Como executar
 
@@ -76,12 +78,26 @@ npm run dev
 
 ## Testes
 
+### Backend
+
 ```bash
 cd backend
 dotnet test
 ```
 
-Os testes exercitam os services reais sobre SQLite in-memory, sem mock de `DbContext`, cobrindo constraints e cascade delete de fato.
+Há dois níveis:
+
+- **Unitários (services):** exercitam os services reais sobre SQLite in-memory, sem mock de `DbContext`, cobrindo constraints e cascade delete de fato.
+- **Integração HTTP:** sobem a API com `WebApplicationFactory`, trocando só o banco por SQLite in-memory, e validam status codes (201/204/400/404/422), serialização JSON e o fluxo completo do desafio via HTTP.
+
+### Frontend
+
+```bash
+cd frontend
+npm test
+```
+
+Vitest + Testing Library cobrem o cliente HTTP (`api`), formatação, formulários (incluindo a UX de menor de idade só despesa) e a tabela de totais.
 
 ## Estrutura do projeto
 
