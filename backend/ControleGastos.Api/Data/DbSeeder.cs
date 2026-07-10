@@ -17,12 +17,16 @@ public static class DbSeeder
 
         var ana = new Pessoa { Nome = "Ana Souza", Idade = 42 };
         var carlos = new Pessoa { Nome = "Carlos Lima", Idade = 35 };
-        // Menor de idade de propósito, para o avaliador testar a regra de
-        // negócio (só despesas) assim que sobe a aplicação.
+        // Dois menores de propósito: regra de negócio (só despesas) + insight
+        // no Totais com o conectivo "e" na lista de nomes.
         var marina = new Pessoa { Nome = "Marina Alves", Idade = 16 };
         var pedro = new Pessoa { Nome = "Pedro Santos", Idade = 28 };
+        var julia = new Pessoa { Nome = "Julia Rocha", Idade = 31 };
+        var cain = new Pessoa { Nome = "Cain Oliveira", Idade = 14 };
 
-        db.Pessoas.AddRange(ana, carlos, marina, pedro);
+        // Exatamente 6 pessoas: o gráfico de totais usa barras verticais até
+        // 6 e troca para horizontais a partir da 7ª
+        db.Pessoas.AddRange(ana, carlos, marina, pedro, julia, cain);
         await db.SaveChangesAsync();
 
         db.Transacoes.AddRange(
@@ -43,7 +47,16 @@ public static class DbSeeder
 
             // Pedro: receita e despesa, saldo positivo.
             new Transacao { PessoaId = pedro.Id, Descricao = "Freela", Valor = 1200.00m, Tipo = TipoTransacao.Receita },
-            new Transacao { PessoaId = pedro.Id, Descricao = "Mercado", Valor = 380.25m, Tipo = TipoTransacao.Despesa }
+            new Transacao { PessoaId = pedro.Id, Descricao = "Mercado", Valor = 380.25m, Tipo = TipoTransacao.Despesa },
+
+            // Julia: saldo positivo moderado.
+            new Transacao { PessoaId = julia.Id, Descricao = "Salário", Valor = 4100.00m, Tipo = TipoTransacao.Receita },
+            new Transacao { PessoaId = julia.Id, Descricao = "Condomínio", Valor = 750.00m, Tipo = TipoTransacao.Despesa },
+            new Transacao { PessoaId = julia.Id, Descricao = "Internet", Valor = 119.90m, Tipo = TipoTransacao.Despesa },
+
+            // Cain: menor de idade, apenas despesas.
+            new Transacao { PessoaId = cain.Id, Descricao = "Lanche", Valor = 28.50m, Tipo = TipoTransacao.Despesa },
+            new Transacao { PessoaId = cain.Id, Descricao = "Material escolar", Valor = 95.00m, Tipo = TipoTransacao.Despesa }
         );
 
         await db.SaveChangesAsync();
